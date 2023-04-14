@@ -6,7 +6,7 @@ const userAccountSchema = new Schema({
   birthdate: { type: Date, required: true },
   email: { type: String, required: true, unique: true },
   phoneNumber: { type: String },
-  password: { type: String, required: true },
+  password: { type: String, required: true, select: false },
   societies: [
     {
       type: Schema.Types.ObjectId,

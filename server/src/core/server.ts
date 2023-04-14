@@ -1,23 +1,42 @@
 import "dotenv/config";
 import express, { Request, Response, NextFunction } from "express";
 import societyRoute from "../routes/society";
+import createHttpError, { isHttpError } from "http-errors";
 
+/* I) EXPRESS_SERVER_INIT_SECTION */
 const server = express();
 
-// sets up express to accept/parse json bodies
+/* II) PRE-HANDLERS_SECTION (MIDDLEWARES) */
+// sets up express to parse request bodies as JSON
 server.use(express.json());
 
-// express error handling requires those parameters even if they are not used
-server.use(
+/* III) ROUTES_SECTION */
+server.use("/api/society", societyRoute);
+
+/* IV) ERROR_HANDLING_SECTION */
+// endpoint not found
+server.use((req, res, next) => {
+  /*
+   * When a request occures, it will go through all the middlewares and routes
+   * If it reaches this middleware, it means that no route has been found
+   */
+  next(createHttpError(404, "Endpoint not found"));
+});
+
+// express special error handling requires those parameters even if they are not used.
+// It also needs to be the last middleware
+const errorHandler =
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (error: unknown, req: Request, res: Response, next: NextFunction) => {
-    const errorMessage =
+    let errorMessage =
       error instanceof Error ? error.message : "An unknown error has occurred";
-    res.status(500).json({ message: errorMessage });
-  }
-);
-
-// routes
-server.use("/api/society", societyRoute);
+    let status = 500;
+    if (isHttpError(error)) {
+      errorMessage = error.message;
+      status = error.status;
+    }
+    res.status(status).json({ message: errorMessage });
+  };
+server.use(errorHandler);
 
 export default server;

@@ -3,7 +3,7 @@ interface ButtonProps {
 
 }
 
-const Button = () { 
+const Button = () => { 
     return (<></>);
 };
 

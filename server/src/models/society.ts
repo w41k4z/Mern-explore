@@ -4,7 +4,7 @@ const societySchema = new Schema({
   name: { type: String, required: true },
   ceo: { type: Schema.Types.ObjectId, ref: "UserAccount" },
   logo: { type: String },
-  password: { type: String, required: true },
+  password: { type: String, required: true, select: false },
   object: { type: String, required: true },
   address: { type: String, required: true },
   headquarters: { type: String, required: true },
