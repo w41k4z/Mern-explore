@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express, { Request, Response, NextFunction } from "express";
 import societyRoute from "../routes/society";
+import userAccountRoute from "../routes/userAccount";
 import createHttpError, { isHttpError } from "http-errors";
 
 /* I) EXPRESS_SERVER_INIT_SECTION */
@@ -12,9 +13,10 @@ server.use(express.json());
 
 /* III) ROUTES_SECTION */
 server.use("/api/society", societyRoute);
+server.use("/api/user-account", userAccountRoute);
 
 /* IV) ERROR_HANDLING_SECTION */
-// endpoint not found
+// for endpoint not found
 server.use((req, res, next) => {
   /*
    * When a request occures, it will go through all the middlewares and routes

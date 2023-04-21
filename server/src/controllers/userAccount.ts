@@ -1,7 +1,6 @@
 import { RequestHandler } from "express";
-import UserModel from "../models/userAccount";
+import UserAccountModel from "../models/userAccount";
 import createHttpError from "http-errors";
-import bcrypt from "bcrypt";
 
 interface signUpBody {
   email?: string;
@@ -22,7 +21,7 @@ export const signIn: RequestHandler<
       );
     }
 
-    const dbUserAccount = await UserModel.findOne({ email: email })
+    const dbUserAccount = await UserAccountModel.findOne({ email: email })
       .select("+password")
       .exec();
 
@@ -32,13 +31,8 @@ export const signIn: RequestHandler<
       throw createHttpError(401, "Invalid credentials");
     }
 
-    const passwordMatch = await bcrypt.compare(
-      rawPassword,
-      dbUserAccount.password
-    );
-
     // checking if the password is correct
-    if (!passwordMatch) {
+    if (dbUserAccount.password !== rawPassword) {
       // for security purposes, we don't want to tell the user that the password is wrong
       throw createHttpError(401, "Invalid credentials");
     }
@@ -48,6 +42,49 @@ export const signIn: RequestHandler<
     const { password, ...userAccount } = dbUserAccount;
 
     res.status(201).json(userAccount);
+  } catch (error) {
+    next(error);
+  }
+};
+
+interface createQuery {
+  name: string;
+  firstName?: string;
+  birthdate: Date;
+  email: string;
+  phoneNumber?: string;
+  rawPassword: string;
+}
+export const create: RequestHandler<
+  unknown,
+  unknown,
+  unknown,
+  createQuery
+> = async (req, res, next) => {
+  const { name, firstName, birthdate, email, phoneNumber, rawPassword } =
+    req.query;
+  try {
+    const dbUserAccount = await UserAccountModel.findOne({
+      email: email,
+    }).exec();
+
+    // checking if the user already exists
+    if (dbUserAccount) {
+      throw createHttpError(409, "Email already in use");
+    }
+
+    const newUserAccount = new UserAccountModel({
+      name,
+      firstName,
+      birthdate: new Date(birthdate),
+      email,
+      phoneNumber,
+      password: rawPassword,
+    });
+
+    await newUserAccount.save();
+
+    res.status(201).json(newUserAccount);
   } catch (error) {
     next(error);
   }

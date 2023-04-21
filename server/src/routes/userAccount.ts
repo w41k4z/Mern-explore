@@ -5,5 +5,6 @@ import * as UserAccountController from "../controllers/userAccount";
 const router = express.Router();
 
 router.get("/sign-in", UserAccountController.signIn);
+router.post("/create", UserAccountController.create);
 
 export default router;
