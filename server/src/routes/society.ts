@@ -4,6 +4,8 @@ import * as SocietyController from "../controllers/society";
 // This do not create a new instance of express, but use the one from server.ts
 const router = express.Router();
 
-router.get("/fetch", SocietyController.fetchAll);
+router.post("/authenticate", SocietyController.authenticate);
+router.post("/create", SocietyController.create);
+router.post("/update", SocietyController.update);
 
 export default router;

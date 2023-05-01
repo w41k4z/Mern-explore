@@ -2,14 +2,14 @@ import { RequestHandler } from "express";
 import UserAccountModel from "../models/userAccount";
 import createHttpError from "http-errors";
 
-interface signUpBody {
+interface signInBody {
   email?: string;
   rawPassword?: string;
 }
 export const signIn: RequestHandler<
   unknown,
   unknown,
-  signUpBody,
+  signInBody,
   unknown
 > = async (req, res, next) => {
   const { email, rawPassword } = req.body;
@@ -37,9 +37,9 @@ export const signIn: RequestHandler<
       throw createHttpError(401, "Invalid credentials");
     }
 
-    // destructuring the password from the dbUserAccount
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...userAccount } = dbUserAccount;
+    const userAccount = dbUserAccount;
+    // removing the password from the response
+    userAccount.password = "";
 
     res.status(201).json(userAccount);
   } catch (error) {

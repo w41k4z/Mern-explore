@@ -1,7 +1,15 @@
 import "dotenv/config";
 import express, { Request, Response, NextFunction } from "express";
+
+import accountingPeriodRoute from "../routes/accountingPeriod";
+import chartOfAccountRoute from "../routes/chartOfAccount";
+import journalCodeRoute from "../routes/journalCode";
+import referenceDocumentRoute from "../routes/referenceDocument";
 import societyRoute from "../routes/society";
+import thirdPartyChartOfAccountRoute from "../routes/thirdPartyChartOfAccount";
 import userAccountRoute from "../routes/userAccount";
+import currencyRoute from "../routes/currency";
+
 import createHttpError, { isHttpError } from "http-errors";
 
 /* I) EXPRESS_SERVER_INIT_SECTION */
@@ -12,7 +20,13 @@ const server = express();
 server.use(express.json());
 
 /* III) ROUTES_SECTION */
+server.use("/api/accounting-period", accountingPeriodRoute);
+server.use("/api/chart-of-account", chartOfAccountRoute);
+server.use("/api/currency", currencyRoute);
+server.use("/api/journal-code", journalCodeRoute);
+server.use("/api/reference-document", referenceDocumentRoute);
 server.use("/api/society", societyRoute);
+server.use("/api/third-party-chart-of-account", thirdPartyChartOfAccountRoute);
 server.use("/api/user-account", userAccountRoute);
 
 /* IV) ERROR_HANDLING_SECTION */
