@@ -1,12 +1,17 @@
-import React from 'react';
-import './assets/css/App.css';
-import LandingPage from './components/LandingPage';
+/* MODULES */
+import { BrowserRouter } from "react-router-dom";
+
+/* STYLES */
+import "./assets/css/App.css";
+
+/* COMPONENTS */
+import AdminSpace from "./components/pages/admin/AdminSpace";
 
 function App() {
   return (
-    <>
-      <LandingPage />
-    </>
+    <BrowserRouter>
+      <AdminSpace />
+    </BrowserRouter>
   );
 }
 
