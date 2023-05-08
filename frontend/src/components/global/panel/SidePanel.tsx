@@ -12,7 +12,7 @@ interface SidePanelProps {
   header: ReactNode;
   panelItems: {
     title: string;
-    type: string;
+    type: string; // nav-item | menu-title
     icon?: ReactNode; // react-icons
     path?: string;
     onItemClick: () => void;
