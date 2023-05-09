@@ -1,5 +1,6 @@
 /* MODULES */
 import { Route, Routes } from "react-router-dom";
+import { BiPowerOff } from "react-icons/bi";
 
 /* COMPONENTS */
 import SidePanel from "../../../global/panel/SidePanel";
@@ -15,7 +16,23 @@ import JournalTransactionRecord from "./content/JournalTransactionRecord";
 /* STATIC DATA */
 import { AdminSidePanelContent } from "./staticData/AdminSidePanel";
 
+/* STYLES */
+import "../../../../assets/css/AdminPanel.css";
+
 const AdminPanel = () => {
+  const assets = require.context("../../../../assets/upload/logo", true);
+
+  interface Images {
+    [key: string]: string;
+  }
+
+  const images: Images = {};
+  assets.keys().forEach((filename: string) => {
+    const image: string = assets(filename);
+    const name: string = filename.replace("./", "");
+    images[name] = image;
+  });
+
   /* CONST DATA */
   const society = {
     name: "DIMPEX",
@@ -27,9 +44,10 @@ const AdminPanel = () => {
       phoneNumber: "034 00 000 00",
       password: "12345678",
     },
-    logo: "huhu.png",
+    logo: "perusahaan.png",
     password: "12345678",
-    object: "Dago Import Export",
+    object:
+      "Dago Import Export est dans la place Huhu Dunno what to put here, just some random text Lorem Ipsum ajdkhfueiqehajdkhfkjh",
     address: "Antananarivo",
     headquarters: "Ensceinte ITU Andoharanofotsy",
     creationDate: new Date(),
@@ -62,66 +80,49 @@ const AdminPanel = () => {
   );
 
   return (
-    <>
-      <header id="header" className="header">
-        <div className="top-left">
-          <div className="navbar-header">
-            <a className="navbar-brand" href="./">
-              <img src="/static/images/logo.png" alt="Logo" />
-            </a>
-            <a className="navbar-brand hidden" href="./">
-              <img src="/static/images/logo2.png" alt="Logo" />
-            </a>
-            <a id="menuToggle" className="menutoggle" href="./">
-              <i className="fa fa-bars"></i>
-            </a>
-          </div>
-        </div>
-        <div className="top-right">
-          <div className="header-menu">
-            <a
-              href="/ela-admin/society/disconnect"
-              className="logout dropdown float-right"
-            >
-              {society.name} <i className="fa fa-power-off"></i>
-            </a>
-          </div>
-        </div>
-      </header>
-      <div className="d-flex">
-        <SidePanel
-          header={AdminSidePanelHeader}
-          panelItems={AdminSidePanelContent}
-        />
-        <div className="main-content">
-          <Routes>
-            <Route
-              path="/society/info"
-              element={<Information society={society} />}
-            />
-            <Route path="/society/files" element={<Files />} />
-            <Route
-              path="/society/financial-statement"
-              element={<FinancialStatement />}
-            />
-            <Route
-              path="/society/chart-of-account/general"
-              element={<GeneralChartOfAccount />}
-            />
-            <Route
-              path="/society/chart-of-account/third-party"
-              element={<ThirdPartyChartOfAccount />}
-            />
-            <Route path="/society/general-ledger" element={<GeneralLedger />} />
-            <Route path="/society/journal/code" element={<JournalCode />} />
-            <Route
-              path="/society/journal/transaction-record"
-              element={<JournalTransactionRecord />}
-            />
-          </Routes>
-        </div>
+    <div className="d-flex admin-panel">
+      <SidePanel
+        header={AdminSidePanelHeader}
+        panelItems={AdminSidePanelContent}
+      />
+      <div className="main-content">
+        <header
+          id="header"
+          className="sticky-top header d-flex justify-content-end px-4 py-2 bg-light"
+        >
+          <a
+            href="/ela-admin/society/disconnect"
+            className="logout dropdown float-right"
+          >
+            <span className="d-flex align-items-center">
+              {society.name} <BiPowerOff className="ms-2"></BiPowerOff>
+            </span>
+          </a>
+        </header>
+        <Routes>
+          <Route
+            path="/info"
+            element={<Information society={society} images={images} />}
+          />
+          <Route path="/files" element={<Files />} />
+          <Route path="/financial-statement" element={<FinancialStatement />} />
+          <Route
+            path="/chart-of-account/general"
+            element={<GeneralChartOfAccount />}
+          />
+          <Route
+            path="/chart-of-account/third-party"
+            element={<ThirdPartyChartOfAccount />}
+          />
+          <Route path="/general-ledger" element={<GeneralLedger />} />
+          <Route path="/journal/code" element={<JournalCode />} />
+          <Route
+            path="/journal/transaction-record"
+            element={<JournalTransactionRecord />}
+          />
+        </Routes>
       </div>
-    </>
+    </div>
   );
 };
 

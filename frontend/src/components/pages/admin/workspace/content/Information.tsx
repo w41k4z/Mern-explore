@@ -25,9 +25,12 @@ interface InformationProps {
     status?: string;
     startDateOfAccountingPeriod: Date;
   };
+  images: {
+    [key: string]: string;
+  };
 }
 
-const Information = ({ society }: InformationProps) => {
+const Information = ({ society, images }: InformationProps) => {
   /* HOOKS SECTION */
 
   /* ELEMENT SECTIONS */
@@ -44,7 +47,7 @@ const Information = ({ society }: InformationProps) => {
           type="text"
           className="form-control"
           id="companyName"
-          value={society.name}
+          defaultValue={society.name}
           required
         />
       ),
@@ -62,7 +65,7 @@ const Information = ({ society }: InformationProps) => {
           type="text"
           className="form-control"
           id="address"
-          value={society.address}
+          defaultValue={society.address}
           required
         />
       ),
@@ -110,9 +113,13 @@ const Information = ({ society }: InformationProps) => {
         </label>
       ),
       input: (
-        <textarea className="form-control" id="object" required>
-          {society.object}
-        </textarea>
+        <textarea
+          className="form-control"
+          id="object"
+          defaultValue={society.object}
+          rows={3}
+          required
+        />
       ),
       invalidErrorMessage: "Please insert a valid society object.",
     },
@@ -128,7 +135,7 @@ const Information = ({ society }: InformationProps) => {
           type="text"
           className="form-control"
           id="headquarters"
-          value={society.headquarters}
+          defaultValue={society.headquarters}
           required
         />
       ),
@@ -146,7 +153,7 @@ const Information = ({ society }: InformationProps) => {
           type="text"
           className="form-control"
           id="tin"
-          value={society.taxIdentificationNumber}
+          defaultValue={society.taxIdentificationNumber}
         />
       ),
     },
@@ -162,7 +169,7 @@ const Information = ({ society }: InformationProps) => {
           type="text"
           className="form-control"
           id="stn"
-          value={society.statisticalNumber}
+          defaultValue={society.statisticalNumber}
         />
       ),
     },
@@ -178,7 +185,7 @@ const Information = ({ society }: InformationProps) => {
           type="text"
           className="form-control"
           id="crgn"
-          value={society.commercialRegisterNumber}
+          defaultValue={society.commercialRegisterNumber}
         />
       ),
     },
@@ -194,29 +201,31 @@ const Information = ({ society }: InformationProps) => {
           type="text"
           className="form-control"
           id="status"
-          value={society.status}
+          defaultValue={society.status}
         />
       ),
     },
   ];
   const validButton = (
     <div className="form-footer d-flex justify-content-end mt-3">
-      <button className="btn btn-primary" type="submit">
+      <button className="btn btn-lg btn-primary" type="submit">
         Save
       </button>
     </div>
   );
 
   return (
-    <div className="card">
+    <div className="card m-4">
       <div className="card-body">
-        <div className="py-5 text-center">
-          <h2>{society.name}</h2>
-        </div>
-
-        <div className="row g-5">
-          <div className="col-md-5 col-lg-4 order-md-last">
-            <h4 className="d-flex justify-content-between align-items-center mb-3">
+        <div className="d-flex justify-content-around align-items-center pb-5 pt-2">
+          <img
+            className="rounded-circle shadow-4-strong"
+            src={images[society.logo]}
+            alt="Logo"
+            style={{ width: "300px", height: "300px" }}
+          />
+          <div className="col-4 order-md-last">
+            <h4 className="d-flex justify-content-center align-items-center mb-3">
               <span className="text-primary">CEO</span>
             </h4>
             <ul className="list-group mb-3">
@@ -262,15 +271,13 @@ const Information = ({ society }: InformationProps) => {
               </li>
             </ul>
           </div>
-          <div className="col-md-7 col-lg-8">
-            <Form
-              inputs={inputs}
-              action={"."}
-              method={"POST"}
-              validButton={validButton}
-            />
-          </div>
         </div>
+        <Form
+          inputs={inputs}
+          action={"."}
+          method={"POST"}
+          validButton={validButton}
+        />
       </div>
     </div>
   );

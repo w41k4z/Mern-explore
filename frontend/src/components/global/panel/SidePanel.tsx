@@ -20,12 +20,12 @@ interface SidePanelProps {
 }
 
 const SidePanel = ({
-  bootstrapClass = "d-flex flex-column flex-shrink-0 p-3 bg-light",
+  bootstrapClass = "d-flex flex-column flex-shrink-0 p-3 bg-light sticky-top",
   header,
   panelItems,
 }: SidePanelProps) => {
   /* HOOKS SECTION */
-  const [activeItem, setActiveItem] = useState(1);
+  const [activeItem, setActiveItem] = useState(-1);
 
   return (
     <div className={bootstrapClass} style={panelStaticStyle}>
