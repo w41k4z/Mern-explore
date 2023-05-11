@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import "./assets/css/App.css";
 
 /* COMPONENTS */
-import AdminSpace from "./components/pages/admin/AdminSpace";
+import AdminSpace from "./pages/admin/AdminSpace";
 
 function App() {
   return (

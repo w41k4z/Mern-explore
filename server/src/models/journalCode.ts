@@ -1,10 +1,10 @@
 import { InferSchemaType, Schema, model } from "mongoose";
 
-const journalCode = new Schema({
+const journalCodeSchema = new Schema({
   code: { type: String, minLength: 2, maxLength: 2, required: true },
   entitled: { type: String, required: true },
 });
 
-type JournalCode = InferSchemaType<typeof journalCode>;
+type JournalCode = InferSchemaType<typeof journalCodeSchema>;
 
-export default model<JournalCode>("JournalCode", journalCode);
+export default model<JournalCode>("JournalCode", journalCodeSchema);

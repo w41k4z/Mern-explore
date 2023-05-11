@@ -1,6 +1,6 @@
 /* MODULES */
 import React from "react";
-import Form from "../../../../global/form/Form";
+import Form from "../../../../components/global/form/Form";
 
 interface InformationProps {
   society: {
@@ -217,7 +217,7 @@ const Information = ({ society, images }: InformationProps) => {
   return (
     <div className="card m-4">
       <div className="card-body">
-        <div className="d-flex justify-content-around align-items-center pb-5 pt-2">
+        <div className="d-flex justify-content-around align-items-center pb-3 pt-1">
           <img
             className="rounded-circle shadow-4-strong"
             src={images[society.logo]}
@@ -249,7 +249,7 @@ const Information = ({ society, images }: InformationProps) => {
                 <div>
                   <h6 className="my-0">BirthDay</h6>
                   <small className="text-muted text-end">
-                    <>{society.ceo.birthdate.toString}</>
+                    <>{society.ceo.birthdate.toString()}</>
                   </small>
                 </div>
               </li>

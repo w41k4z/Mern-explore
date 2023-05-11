@@ -2,7 +2,7 @@ import { ReactNode, useState } from "react";
 import { Link } from "react-router-dom";
 
 const panelStaticStyle = {
-  width: "280px",
+  maxWidth: "280px",
   height: "100vh",
   overflow: "scroll",
 };
@@ -35,7 +35,7 @@ const SidePanel = ({
         {panelItems.map((item, index) => {
           return item.type === "menu-title" ? (
             <li
-              className={item.type + " my-2"}
+              className={item.type + " my-2 d-none d-md-block"}
               key={"section-" + index}
               style={{ fontWeight: "bold", fontSize: "1.2rem" }}
             >
@@ -65,7 +65,7 @@ const SidePanel = ({
                 >
                   {item.icon}
                 </span>
-                <p className="m-0 ms-4">{item.title}</p>
+                <p className="m-0 ms-4 d-none d-md-block">{item.title}</p>
               </Link>
             </li>
           );

@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { BiPowerOff } from "react-icons/bi";
 
 /* COMPONENTS */
-import SidePanel from "../../../global/panel/SidePanel";
+import SidePanel from "../../../components/global/panel/SidePanel";
 import Information from "./content/Information";
 import Files from "./content/Files";
 import FinancialStatement from "./content/FinancialStatement";
@@ -47,7 +47,7 @@ const AdminPanel = () => {
     logo: "perusahaan.png",
     password: "12345678",
     object:
-      "Dago Import Export est dans la place Huhu Dunno what to put here, just some random text Lorem Ipsum ajdkhfueiqehajdkhfkjh",
+      "Dago Import Export est dans la place Huhu Dunno what to put here, just some random text Lorem Ipsum",
     address: "Antananarivo",
     headquarters: "Ensceinte ITU Andoharanofotsy",
     creationDate: new Date(),
@@ -73,9 +73,15 @@ const AdminPanel = () => {
   });
 
   const AdminSidePanelHeader = (
-    <div className="d-flex align-items-center mb-3 mb-md-0 me-md-auto">
-      <img src="" alt="Sary" />
-      <span className="fs-4 ms-2">Sidebar</span>
+    <div className="d-flex justify-content-center align-items-center mb-3 mb-md-0 me-md-auto">
+      <img
+        src={images[society.logo]}
+        className="img-fluid"
+        width={40}
+        height={40}
+        alt="Sary"
+      />
+      <span className="fs-4 ms-md-4 d-none d-md-block">{society.name}</span>
     </div>
   );
 
@@ -121,6 +127,27 @@ const AdminPanel = () => {
             element={<JournalTransactionRecord />}
           />
         </Routes>
+        <footer>
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="footer p-3 mt-4 text-center bg-light">
+                  Developed By:
+                  <span className="text-info font-weight-normal"> DIMPEX</span>
+                  , Using <i className="fab fa-react" /> React JS &amp; Redux JS
+                  integrated with external movies data API
+                  <a
+                    href="http://www.omdbapi.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    OMDB
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   );
