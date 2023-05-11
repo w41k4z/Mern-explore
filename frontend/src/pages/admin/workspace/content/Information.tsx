@@ -1,6 +1,6 @@
 /* MODULES */
 import React from "react";
-import Form from "../../../../components/global/form/Form";
+import Form from "../../../../components/form/Form";
 
 interface InformationProps {
   society: {
@@ -217,14 +217,19 @@ const Information = ({ society, images }: InformationProps) => {
   return (
     <div className="card m-4">
       <div className="card-body">
-        <div className="d-flex justify-content-around align-items-center pb-3 pt-1">
+        <div className="d-flex flex-column flex-md-row justify-content-around align-items-center pb-3 pt-1">
           <img
             className="rounded-circle shadow-4-strong"
             src={images[society.logo]}
             alt="Logo"
-            style={{ width: "300px", height: "300px" }}
+            style={{
+              maxWidth: "200px",
+              maxHeight: "200px",
+              minWidth: "100px",
+              minHeight: "100px",
+            }}
           />
-          <div className="col-4 order-md-last">
+          <div className="mt-sm-5 col-md-4 order-md-last">
             <h4 className="d-flex justify-content-center align-items-center mb-3">
               <span className="text-primary">CEO</span>
             </h4>

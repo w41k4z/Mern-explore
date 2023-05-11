@@ -1,7 +1,7 @@
 /* COMPONENTS */
 import { Route, Routes } from "react-router-dom";
 import AdminPanel from "./workspace/AdminPanel";
-import LandingPage from "../../components/LandingPage";
+import LandingPage from "../LandingPage";
 
 const AdminSpace = () => {
   return (

@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { BiPowerOff } from "react-icons/bi";
 
 /* COMPONENTS */
-import SidePanel from "../../../components/global/panel/SidePanel";
+import SidePanel from "../../../components/panel/SidePanel";
 import Information from "./content/Information";
 import Files from "./content/Files";
 import FinancialStatement from "./content/FinancialStatement";
@@ -14,13 +14,13 @@ import JournalCode from "./content/JournalCode";
 import JournalTransactionRecord from "./content/JournalTransactionRecord";
 
 /* STATIC DATA */
-import { AdminSidePanelContent } from "./staticData/AdminSidePanel";
+import { AdminSidePanelContent } from "./staticData/AdminSidePanelContent";
 
 /* STYLES */
-import "../../../../assets/css/AdminPanel.css";
+import "../../../assets/css/AdminPanel.css";
 
 const AdminPanel = () => {
-  const assets = require.context("../../../../assets/upload/logo", true);
+  const assets = require.context("../../../assets/upload/logo", true);
 
   interface Images {
     [key: string]: string;

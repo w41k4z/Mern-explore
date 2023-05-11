@@ -1,5 +1,10 @@
+.admin-panel {
+    background-color: #eeeff4;
+}
+
 .main-content {
     width: 100%;
+    background-color: #eeeff4;
 }
 
 .header {
@@ -15,8 +20,4 @@
 .logout:hover {
     cursor: pointer;
     color: red;
-}
-
-.admin-panel {
-    background-color: #eeeff4;
 }

@@ -1,13 +1,14 @@
 /* MODULES */
 import React, { useEffect, useState } from "react";
-import DataTable, { TableColumn } from "react-data-table-component";
-import { BiDownArrowAlt, BiEditAlt, BiTrash, BiPlus } from "react-icons/bi";
+import { TableColumn } from "react-data-table-component";
+import { BiEditAlt, BiTrash } from "react-icons/bi";
 
 /* STYLE */
-import "../../../../../assets/css/generalChartOfAccount.css";
+import "../../../../assets/css/generalChartOfAccount.css";
 
 /* TYPE */
 import { ChartOfAccount } from "../../../../models/chartOfAccount";
+import BasicCRUDTable from "../../../../components/datatable/BasicCRUDTable";
 
 const GeneralChartOfAccount = () => {
   /* HOOKS SECTION */
@@ -40,34 +41,7 @@ const GeneralChartOfAccount = () => {
       },
     ];
     setCharOfAccounts(data);
-    setFilteredChartOfAccounts(data);
   }, []);
-  const [filteredChartOfAccounts, setFilteredChartOfAccounts] = useState<
-    ChartOfAccount[]
-  >([]);
-
-  /* STYLES */
-  const datatableStyle = {
-    table: {
-      style: {
-        border: "none",
-      },
-    },
-    headCells: {
-      style: {
-        color: "#000",
-        fontSize: "1.1rem",
-        fontWeight: "bold",
-        borderBottom: "1px solid #959090",
-      },
-    },
-    cells: {
-      style: {
-        color: "#000",
-        fontSize: "1rem",
-      },
-    },
-  };
 
   /* CONST DATA */
   const columns: TableColumn<ChartOfAccount>[] = [
@@ -102,66 +76,13 @@ const GeneralChartOfAccount = () => {
     },
   ];
 
-  /* HANDLERS */
-  const handleFilter = (filter: string) => {
-    setFilteredChartOfAccounts(
-      filter === ""
-        ? chartOfAccounts
-        : chartOfAccounts.filter((chartOfAccount) => {
-            return (
-              chartOfAccount.entitled
-                .toLowerCase()
-                .includes(filter.toLowerCase()) ||
-              chartOfAccount.accountNumber
-                .toLowerCase()
-                .startsWith(filter.toLowerCase())
-            );
-          })
-    );
-  };
-
   return (
-    <div className="m-4 bg-white">
-      <div className="d-flex justify-content-between p-3">
-        <h3>General chart of account</h3>
-        <div className="d-flex align-items-center">
-          <input
-            type="text"
-            name=""
-            id=""
-            placeholder="Filter..."
-            onChange={(event) => {
-              handleFilter(event.target.value);
-            }}
-            className="rounded border-1 p-2"
-            style={{ height: "35px" }}
-          />
-          <BiPlus className="add-button mx-1" />
-        </div>
-      </div>
-      <DataTable
-        columns={columns}
-        data={filteredChartOfAccounts}
-        fixedHeader
-        customStyles={datatableStyle}
-        striped
-        responsive
-        sortIcon={<BiDownArrowAlt />}
-        pagination
-        paginationRowsPerPageOptions={[5, 10, 15, 20]}
-        paginationPerPage={5}
-        noDataComponent={
-          <p
-            className="p-4"
-            style={{
-              fontSize: "20px",
-            }}
-          >
-            <b>Records empty</b>
-          </p>
-        }
-      />
-    </div>
+    <BasicCRUDTable
+      columns={columns}
+      data={chartOfAccounts}
+      title={"General chart of account"}
+      toFilter={["accountNumber", "entitled"]}
+    />
   );
 };
 
