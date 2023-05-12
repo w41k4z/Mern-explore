@@ -1,13 +1,19 @@
 /* MODULES */
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import { Modal } from "react-bootstrap";
 import DataTable from "react-data-table-component";
-import { BiDownArrowAlt, BiPlus } from "react-icons/bi";
+import { BiDownArrowAlt, BiPlus, BiEditAlt, BiTrash } from "react-icons/bi";
+import { BsDownload, BsUpload } from "react-icons/bs";
+import Form from "../form/Form";
 
 interface BasicCRUDTableProps {
   columns: any[];
   data: any[];
   title: string;
   toFilter?: string[];
+  hasImport?: boolean;
+  hasExport?: boolean;
+  addModalForm?: ReactNode;
 }
 
 const BasicCRUDTable = ({
@@ -15,11 +21,15 @@ const BasicCRUDTable = ({
   data,
   title,
   toFilter,
+  hasImport = false,
+  hasExport = false,
+  addModalForm,
 }: BasicCRUDTableProps) => {
   const [filteredItems, setFilteredItems] = useState<any[]>([]);
   useEffect(() => {
     setFilteredItems(data);
   }, [data]);
+  const [addModalVisibility, setAddModalVisibility] = useState(false);
 
   /* STYLES */
   const datatableStyle = {
@@ -81,11 +91,49 @@ const BasicCRUDTable = ({
     );
   };
 
+  /* LOGIC */
+  const showAddModal = () => {
+    setAddModalVisibility(true);
+  };
+
+  const hideAddModal = () => {
+    setAddModalVisibility(false);
+  };
+
+  /* ELEMENT */
+  const addModal = (
+    <Modal show onHide={hideAddModal}>
+      <Modal.Header closeButton>
+        <Modal.Title>Add new {title.toLowerCase()}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>{addModalForm}</Modal.Body>
+    </Modal>
+  );
+
   return (
     <div className="m-4 bg-white">
       <div className="d-flex flex-column flex-md-row justify-content-md-between p-3">
-        <h3>{title}</h3>
-        <div className="d-flex align-items-center">
+        <div>
+          <h3>{title}</h3>
+          <div className="action d-flex">
+            {hasImport && (
+              <button className="btn btn-outline-success d-flex align-items-center me-2">
+                <BsUpload style={{ fontSize: "20px" }} className="me-2" />{" "}
+                Import csv
+              </button>
+            )}
+            {hasExport && (
+              <button className="btn btn-outline-primary d-flex align-items-center">
+                <BsDownload style={{ fontSize: "20px" }} className="me-2" />{" "}
+                Export pdf
+              </button>
+            )}
+          </div>
+        </div>
+        <div
+          className="d-flex align-items-center mt-sm-3 mt-md-0"
+          style={{ height: "fit-content" }}
+        >
           <input
             type="text"
             name=""
@@ -97,7 +145,8 @@ const BasicCRUDTable = ({
             className="rounded border-1 p-2"
             style={{ height: "35px" }}
           />
-          <BiPlus className="add-button mx-1" />
+          <BiPlus className="add-button mx-1" onClick={showAddModal} />
+          {addModalVisibility && addModal}
         </div>
       </div>
       <DataTable

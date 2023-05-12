@@ -72,7 +72,7 @@ const Information = ({ society, images }: InformationProps) => {
       invalidErrorMessage: "Please enter a valid address.",
     },
     {
-      bootstrapClass: "col-6",
+      bootstrapClass: "col-md-6",
       label: (
         <label htmlFor="creationDate" className="form-label">
           Creation date
@@ -89,7 +89,7 @@ const Information = ({ society, images }: InformationProps) => {
       invalidErrorMessage: "Please choose a valid date.",
     },
     {
-      bootstrapClass: "col-6",
+      bootstrapClass: "col-md-6",
       label: (
         <label htmlFor="creationDate" className="form-label">
           Start date of accounting period
@@ -142,7 +142,7 @@ const Information = ({ society, images }: InformationProps) => {
       invalidErrorMessage: "Please insert a valid headquarters.",
     },
     {
-      bootstrapClass: "col-6",
+      bootstrapClass: "col-md-6",
       label: (
         <label htmlFor="tin" className="form-label">
           Tax identification number
@@ -158,7 +158,7 @@ const Information = ({ society, images }: InformationProps) => {
       ),
     },
     {
-      bootstrapClass: "col-6",
+      bootstrapClass: "col-md-6",
       label: (
         <label htmlFor="stn" className="form-label">
           Statistical number
@@ -174,7 +174,7 @@ const Information = ({ society, images }: InformationProps) => {
       ),
     },
     {
-      bootstrapClass: "col-6",
+      bootstrapClass: "col-md-6",
       label: (
         <label htmlFor="crgn" className="form-label">
           Commercial register number
@@ -190,7 +190,7 @@ const Information = ({ society, images }: InformationProps) => {
       ),
     },
     {
-      bootstrapClass: "col-6",
+      bootstrapClass: "col-md-6",
       label: (
         <label htmlFor="status" className="form-label">
           Status
@@ -217,7 +217,7 @@ const Information = ({ society, images }: InformationProps) => {
   return (
     <div className="card m-4">
       <div className="card-body">
-        <div className="d-flex flex-column flex-md-row justify-content-around align-items-center pb-3 pt-1">
+        <div className="d-flex flex-column flex-md-row justify-content-around align-items-center pb-3">
           <img
             className="rounded-circle shadow-4-strong"
             src={images[society.logo]}
