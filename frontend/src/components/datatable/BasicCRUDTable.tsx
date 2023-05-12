@@ -1,110 +1,92 @@
-/* MODULES */
+/* COMPONENT */
 import { ReactNode, useEffect, useState } from "react";
+import { BiPlus } from "react-icons/bi";
+import { AiOutlineClose } from "react-icons/ai";
+import { BsDownload, BsUpload, BsFilter } from "react-icons/bs";
+import { TableColumn } from "./TableColumn";
 import { Modal } from "react-bootstrap";
-import DataTable from "react-data-table-component";
-import { BiDownArrowAlt, BiPlus, BiEditAlt, BiTrash } from "react-icons/bi";
-import { BsDownload, BsUpload } from "react-icons/bs";
-import Form from "../form/Form";
+import TableRow from "./TableRow";
 
 interface BasicCRUDTableProps {
-  columns: any[];
+  title?: string;
+  columns: TableColumn[];
   data: any[];
-  title: string;
-  toFilter?: string[];
-  hasImport?: boolean;
-  hasExport?: boolean;
-  addModalForm?: ReactNode;
+  dataPropIDName: string;
+  indexedRow?: boolean;
+  hasImportCsv?: boolean;
+  hasExportPdf?: boolean;
+  addModalForm: ReactNode;
+  updateModalForm: (row: any) => ReactNode;
 }
 
 const BasicCRUDTable = ({
+  title,
   columns,
   data,
-  title,
-  toFilter,
-  hasImport = false,
-  hasExport = false,
+  dataPropIDName,
+  indexedRow = false,
+  hasImportCsv = false,
+  hasExportPdf = false,
   addModalForm,
+  updateModalForm,
 }: BasicCRUDTableProps) => {
-  const [filteredItems, setFilteredItems] = useState<any[]>([]);
+  /* HOOOKS */
+  const [filters, setFilters] = useState<{ [key: string]: string }>();
   useEffect(() => {
-    setFilteredItems(data);
-  }, [data]);
+    const arrFilters: { [key: string]: string } = {};
+    for (const column of columns) {
+      arrFilters[column.propTarget] = "";
+    }
+    setFilters(arrFilters);
+  }, [columns]);
   const [addModalVisibility, setAddModalVisibility] = useState(false);
 
   /* STYLES */
-  const datatableStyle = {
-    table: {
-      style: {
-        border: "none",
-      },
-    },
-    headCells: {
-      style: {
-        color: "#000",
-        fontSize: "1.1rem",
-        fontWeight: "bold",
-        borderBottom: "1px solid #959090",
-      },
-    },
-    cells: {
-      style: {
-        color: "#000",
-        fontSize: "1rem",
-      },
-    },
+  const filterContainerStyle = {
+    height: "30px",
+    width: "fit-content",
+    borderBottom: "1px outset",
+    paddingBottom: "5px",
+    display: "flex",
+    alignItems: "center",
   };
-
-  /* HANDLERS */
-  const handleFilter = (filter: string) => {
-    setFilteredItems(
-      filter === ""
-        ? data
-        : data.filter((item) => {
-            if (toFilter == null) {
-              for (const key in item) {
-                if (
-                  item[key]
-                    .toString()
-                    .toLowerCase()
-                    .includes(filter.toLowerCase())
-                ) {
-                  return true;
-                }
-              }
-              return false;
-            } else {
-              for (const key in item) {
-                if (toFilter.includes(key)) {
-                  if (
-                    item[key]
-                      .toString()
-                      .toLowerCase()
-                      .includes(filter.toLowerCase())
-                  ) {
-                    return true;
-                  }
-                }
-              }
-              return false;
-            }
-          })
-    );
+  const filterStyle = {
+    outline: "none",
+    border: "unset",
   };
 
   /* LOGIC */
-  const showAddModal = () => {
-    setAddModalVisibility(true);
-  };
+  const showAddModal = () => setAddModalVisibility(true);
+  const hideAddModal = () => setAddModalVisibility(false);
 
-  const hideAddModal = () => {
-    setAddModalVisibility(false);
+  const filterData = () => {
+    let filteredData = data;
+    for (const column of columns) {
+      filteredData = filteredData.filter((item) => {
+        return item[column.propTarget]
+          .toString()
+          .toLowerCase()
+          .includes(filters ? filters[column.propTarget].toLowerCase() : "");
+      });
+    }
+    return filteredData;
+  };
+  const handleFilter = (filter: string, value: string) => {
+    const arrFilter = { ...filters };
+    arrFilter[filter] = value;
+    setFilters({ ...arrFilter });
+  };
+  const clearFilter = (filter: string) => {
+    const arrFilter = { ...filters };
+    arrFilter[filter] = "";
+    setFilters({ ...arrFilter });
   };
 
   /* ELEMENT */
   const addModal = (
     <Modal show onHide={hideAddModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Add new {title.toLowerCase()}</Modal.Title>
+        <Modal.Title>Add new {title && title.toLowerCase()}</Modal.Title>
       </Modal.Header>
       <Modal.Body>{addModalForm}</Modal.Body>
     </Modal>
@@ -113,64 +95,118 @@ const BasicCRUDTable = ({
   return (
     <div className="m-4 bg-white">
       <div className="d-flex flex-column flex-md-row justify-content-md-between p-3">
-        <div>
-          <h3>{title}</h3>
+        <h3>{title}</h3>
+        <div
+          className="d-flex align-items-center mt-sm-3 mt-md-0"
+          style={{ height: "fit-content" }}
+        >
           <div className="action d-flex">
-            {hasImport && (
+            {hasImportCsv && (
               <button className="btn btn-outline-success d-flex align-items-center me-2">
                 <BsUpload style={{ fontSize: "20px" }} className="me-2" />{" "}
                 Import csv
               </button>
             )}
-            {hasExport && (
-              <button className="btn btn-outline-primary d-flex align-items-center">
+            {hasExportPdf && (
+              <button className="btn btn-outline-dark d-flex align-items-center">
                 <BsDownload style={{ fontSize: "20px" }} className="me-2" />{" "}
                 Export pdf
               </button>
             )}
           </div>
-        </div>
-        <div
-          className="d-flex align-items-center mt-sm-3 mt-md-0"
-          style={{ height: "fit-content" }}
-        >
-          <input
-            type="text"
-            name=""
-            id=""
-            placeholder="Filter..."
-            onChange={(event) => {
-              handleFilter(event.target.value);
-            }}
-            className="rounded border-1 p-2"
-            style={{ height: "35px" }}
-          />
-          <BiPlus className="add-button mx-1" onClick={showAddModal} />
+          <button
+            className="mx-1 btn btn-outline-primary"
+            onClick={showAddModal}
+          >
+            <BiPlus style={{ fontSize: "20px" }} />
+          </button>
           {addModalVisibility && addModal}
         </div>
       </div>
-      <DataTable
-        columns={columns}
-        data={filteredItems}
-        fixedHeader
-        customStyles={datatableStyle}
-        striped
-        responsive
-        sortIcon={<BiDownArrowAlt />}
-        pagination
-        paginationRowsPerPageOptions={[5, 10, 15, 20]}
-        paginationPerPage={5}
-        noDataComponent={
-          <p
-            className="p-4"
-            style={{
-              fontSize: "20px",
-            }}
-          >
-            <b>Records empty</b>
-          </p>
-        }
-      />
+
+      <div className="table-responsive">
+        <table className="table table-striped">
+          <thead className="px-2 table-bordered table-dark">
+            <tr
+              style={{
+                color: "#000",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                borderBottom: "1px solid #959090",
+              }}
+              className="text-white"
+            >
+              {indexedRow && (
+                <th scope="col">
+                  <div>#.</div>
+                </th>
+              )}
+              {columns.map((column, index) => {
+                return (
+                  <th scope="col" key={"table-header-" + index}>
+                    <div>{column.name}</div>
+                    <div style={filterContainerStyle}>
+                      <BsFilter
+                        className="me-1 d-none d-md-block"
+                        style={{ fontSize: "23px" }}
+                      />
+                      <input
+                        className="bg-dark text-white"
+                        style={filterStyle}
+                        placeholder={"Filter by '" + column.name + "'"}
+                        type="text"
+                        value={filters ? filters[column.propTarget] : ""}
+                        onChange={(event) => {
+                          handleFilter(column.propTarget, event.target.value);
+                        }}
+                      />
+                      <AiOutlineClose
+                        onClick={() => {
+                          clearFilter(column.propTarget);
+                        }}
+                      />
+                    </div>
+                  </th>
+                );
+              })}
+              <th scope="col">
+                <div>Actions</div> <div style={{ height: "30px" }}></div>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="px-2">
+            {filterData().length === 0 && (
+              <tr>
+                {indexedRow && <td></td>}
+                {columns.map((column, index) => {
+                  return (
+                    <td
+                      key={"table-row-null-" + index}
+                      style={{
+                        fontStyle: "italic",
+                      }}
+                    >
+                      null
+                    </td>
+                  );
+                })}
+                <td></td>
+              </tr>
+            )}
+            {filterData().map((data, index) => (
+              <TableRow
+                key={"Table-row-" + index}
+                columns={columns}
+                data={data}
+                dataPropIDName={dataPropIDName}
+                indexedRow={indexedRow}
+                index={index + 1}
+                updateModalForm={updateModalForm(data)}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
