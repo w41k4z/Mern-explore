@@ -19,13 +19,6 @@ export const AdminSidePanelContent = [
     onItemClick: () => {},
   },
   {
-    title: "Files",
-    type: "nav-item",
-    icon: <BoxIcon.BiFile />,
-    path: "/society/files",
-    onItemClick: () => {},
-  },
-  {
     title: "Chart of Accounts",
     type: "menu-title",
     onItemClick: () => {},

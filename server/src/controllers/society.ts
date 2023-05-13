@@ -27,7 +27,7 @@ export const authenticate: RequestHandler<
   }
 };
 
-interface updateQuery {
+interface updateBody {
   societyID?: string;
   name?: string;
   logo?: string;
@@ -39,7 +39,7 @@ interface updateQuery {
   commercialRegisterNumber?: string;
   status?: string;
 }
-export const update: RequestHandler<any, any, any, updateQuery> = async (
+export const update: RequestHandler<any, any, updateBody, any> = async (
   req,
   res,
   next
@@ -55,9 +55,9 @@ export const update: RequestHandler<any, any, any, updateQuery> = async (
     statisticalNumber,
     commercialRegisterNumber,
     status,
-  } = req.query;
+  } = req.body;
   try {
-    const dbSociety = await SocietyModel.findOne({ _id: societyID }).exec();
+    const dbSociety = await SocietyModel.findById(societyID).exec();
     if (!dbSociety) {
       throw new Error("Society not found.");
     }
@@ -95,7 +95,7 @@ export const update: RequestHandler<any, any, any, updateQuery> = async (
   }
 };
 
-interface createQuery {
+interface createBody {
   name?: string;
   ceo?: string;
   logo?: string;
@@ -111,7 +111,7 @@ interface createQuery {
   startDateOfAccountingPeriod?: Date;
   accountingCurrency?: string;
 }
-export const create: RequestHandler<any, any, any, createQuery> = async (
+export const create: RequestHandler<any, any, createBody, any> = async (
   req,
   res,
   next
@@ -131,7 +131,7 @@ export const create: RequestHandler<any, any, any, createQuery> = async (
     status,
     startDateOfAccountingPeriod,
     accountingCurrency,
-  } = req.query;
+  } = req.body;
   try {
     const society = new SocietyModel({
       name,
@@ -151,6 +151,17 @@ export const create: RequestHandler<any, any, any, createQuery> = async (
     });
     await society.save();
     res.status(201).json(society);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const prod: RequestHandler = async (req, res, next) => {
+  try {
+    const dimpex = await SocietyModel.findById(
+      "645fbc15c704630d4ffe9ef7"
+    ).exec();
+    res.status(200).json(dimpex);
   } catch (error) {
     next(error);
   }

@@ -1,7 +1,10 @@
-/* COMPONENT */
+/* COMPONENTS */
 import { ReactNode, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { BiEditAlt, BiTrash } from "react-icons/bi";
+
+/* HELPER */
+import { formatNumberToCurrency } from "../../helpers/NumberHelper";
 
 interface TableRowProps {
   columns: any[];
@@ -69,22 +72,25 @@ const TableRow = ({
       )}
       {columns.map((column, index2) => {
         return (
-          <td key={"table-row-" + index + "-" + index2}>
-            {data[column.propTarget]}
+          <td
+            key={"table-row-" + index + "-" + index2}
+            className={column.format === "currency" ? "text-end" : ""}
+          >
+            {column.format === "currency"
+              ? formatNumberToCurrency(data[column.propTarget])
+              : data[column.propTarget]}
           </td>
         );
       })}
-      <td>
-        <div className="btn-group">
-          <button className="btn btn-outline-warning" onClick={showUpdateModal}>
-            <BiEditAlt />
-          </button>
-          {updateModalVisibility && updateModal(data)}
-          <button className="btn btn-outline-danger" onClick={showDeleteModal}>
-            <BiTrash />
-          </button>
-          {deleteModalVisibility && deleteModal(data[dataPropIDName])}
-        </div>
+      <td className="btn-group">
+        <button className="btn btn-outline-warning" onClick={showUpdateModal}>
+          <BiEditAlt />
+        </button>
+        {updateModalVisibility && updateModal(data)}
+        <button className="btn btn-outline-danger" onClick={showDeleteModal}>
+          <BiTrash />
+        </button>
+        {deleteModalVisibility && deleteModal(data[dataPropIDName])}
       </td>
     </tr>
   );

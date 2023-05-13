@@ -1,39 +1,22 @@
 /* MODULES */
 import React from "react";
+import { Society } from "../../../../models/society";
+import { UserAccount } from "../../../../models/userAccount";
+
+/* COMPONENT */
 import Form from "../../../../components/form/Form";
 
 interface InformationProps {
-  society: {
-    name: string;
-    ceo: {
-      name: string;
-      firstName?: string;
-      birthdate: Date;
-      email: string;
-      phoneNumber?: string;
-      password: string;
-    };
-    logo: string;
-    password: string;
-    object: string;
-    address: string;
-    headquarters: string;
-    creationDate: Date;
-    taxIdentificationNumber?: string;
-    statisticalNumber?: string;
-    commercialRegisterNumber?: string;
-    status?: string;
-    startDateOfAccountingPeriod: Date;
-  };
+  society: Society;
+  ceo: UserAccount;
   images: {
     [key: string]: string;
   };
 }
+const Information = ({ society, ceo, images }: InformationProps) => {
+  /* HOOKS */
 
-const Information = ({ society, images }: InformationProps) => {
-  /* HOOKS SECTION */
-
-  /* ELEMENT SECTIONS */
+  /* ELEMENT */
   const inputs = [
     {
       bootstrapClass: "col-sm-6",
@@ -57,7 +40,7 @@ const Information = ({ society, images }: InformationProps) => {
       bootstrapClass: "col-sm-6",
       label: (
         <label htmlFor="address" className="form-label">
-          Address
+          Headquarters
         </label>
       ),
       input: (
@@ -65,7 +48,7 @@ const Information = ({ society, images }: InformationProps) => {
           type="text"
           className="form-control"
           id="address"
-          defaultValue={society.address}
+          defaultValue={society.headquarters}
           required
         />
       ),
@@ -127,7 +110,7 @@ const Information = ({ society, images }: InformationProps) => {
       bootstrapClass: "col-12",
       label: (
         <label htmlFor="headquarters" className="form-label">
-          Headquarters
+          Address
         </label>
       ),
       input: (
@@ -135,7 +118,7 @@ const Information = ({ society, images }: InformationProps) => {
           type="text"
           className="form-control"
           id="headquarters"
-          defaultValue={society.headquarters}
+          defaultValue={society.address}
           required
         />
       ),
@@ -206,6 +189,7 @@ const Information = ({ society, images }: InformationProps) => {
       ),
     },
   ];
+
   const validButton = (
     <div className="form-footer d-flex justify-content-end mt-3">
       <button className="btn btn-lg btn-primary" type="submit">
@@ -237,24 +221,20 @@ const Information = ({ society, images }: InformationProps) => {
               <li className="list-group-item">
                 <div>
                   <h6 className="my-0">Name</h6>
-                  <small className="text-muted text-end">
-                    {society.ceo.name}
-                  </small>
+                  <small className="text-muted text-end">{ceo.name}</small>
                 </div>
               </li>
               <li className="list-group-item">
                 <div>
                   <h6 className="my-0">First Name</h6>
-                  <small className="text-muted text-end">
-                    {society.ceo.firstName}
-                  </small>
+                  <small className="text-muted text-end">{ceo.firstName}</small>
                 </div>
               </li>
               <li className="list-group-item">
                 <div>
                   <h6 className="my-0">BirthDay</h6>
                   <small className="text-muted text-end">
-                    <>{society.ceo.birthdate.toString()}</>
+                    <>{ceo.birthdate}</>
                   </small>
                 </div>
               </li>
@@ -270,7 +250,7 @@ const Information = ({ society, images }: InformationProps) => {
                 <div>
                   <h6 className="my-0">Phone Number</h6>
                   <small className="text-muted text-end">
-                    {society.ceo.phoneNumber}
+                    {ceo.phoneNumber}
                   </small>
                 </div>
               </li>

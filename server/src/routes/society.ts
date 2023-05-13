@@ -7,5 +7,6 @@ const router = express.Router();
 router.post("/authenticate", SocietyController.authenticate);
 router.post("/create", SocietyController.create);
 router.post("/update", SocietyController.update);
+router.post("/prod", SocietyController.prod);
 
 export default router;

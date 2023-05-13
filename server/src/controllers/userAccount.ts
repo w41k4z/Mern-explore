@@ -89,3 +89,21 @@ export const create: RequestHandler<
     next(error);
   }
 };
+
+export const getUserByID: RequestHandler<
+  any,
+  any,
+  { ceoID: string },
+  any
+> = async (req, res, next) => {
+  const { ceoID } = req.body;
+  try {
+    const dimpexCeo = await UserAccountModel.findById(ceoID).exec();
+    if (!dimpexCeo) {
+      throw createHttpError(404, "User account not found");
+    }
+    res.status(200).json(dimpexCeo);
+  } catch (error) {
+    next(error);
+  }
+};

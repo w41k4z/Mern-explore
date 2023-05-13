@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express, { Request, Response, NextFunction } from "express";
+import cors from "cors";
 
 import accountingPeriodRoute from "../routes/accountingPeriod";
 import chartOfAccountRoute from "../routes/chartOfAccount";
@@ -17,6 +18,7 @@ const server = express();
 
 /* II) PRE-HANDLERS_SECTION (MIDDLEWARES) */
 // sets up express to parse request bodies as JSON
+server.use(cors());
 server.use(express.json());
 
 /* III) ROUTES_SECTION */

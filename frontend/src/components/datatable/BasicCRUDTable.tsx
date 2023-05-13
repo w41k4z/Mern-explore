@@ -17,6 +17,7 @@ interface BasicCRUDTableProps {
   hasExportPdf?: boolean;
   addModalForm: ReactNode;
   updateModalForm: (row: any) => ReactNode;
+  uploadCall: (file: File) => void;
 }
 
 const BasicCRUDTable = ({
@@ -29,6 +30,7 @@ const BasicCRUDTable = ({
   hasExportPdf = false,
   addModalForm,
   updateModalForm,
+  uploadCall,
 }: BasicCRUDTableProps) => {
   /* HOOOKS */
   const [filters, setFilters] = useState<{ [key: string]: string }>();
@@ -38,8 +40,10 @@ const BasicCRUDTable = ({
       arrFilters[column.propTarget] = "";
     }
     setFilters(arrFilters);
-  }, [columns]);
+  }, [columns, data]);
   const [addModalVisibility, setAddModalVisibility] = useState(false);
+  const [importModalVisibility, setImportModalVisibility] = useState(false);
+  const [uploadingFile, setUploadingFile] = useState<File>();
 
   /* STYLES */
   const filterContainerStyle = {
@@ -58,6 +62,8 @@ const BasicCRUDTable = ({
   /* LOGIC */
   const showAddModal = () => setAddModalVisibility(true);
   const hideAddModal = () => setAddModalVisibility(false);
+  const showImportModal = () => setImportModalVisibility(true);
+  const hideImportModal = () => setImportModalVisibility(false);
 
   const filterData = () => {
     let filteredData = data;
@@ -82,6 +88,13 @@ const BasicCRUDTable = ({
     setFilters({ ...arrFilter });
   };
 
+  const uploadFile = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    uploadingFile && uploadCall(uploadingFile);
+  };
+
   /* ELEMENT */
   const addModal = (
     <Modal show onHide={hideAddModal}>
@@ -89,6 +102,45 @@ const BasicCRUDTable = ({
         <Modal.Title>Add new {title && title.toLowerCase()}</Modal.Title>
       </Modal.Header>
       <Modal.Body>{addModalForm}</Modal.Body>
+    </Modal>
+  );
+  const importModal = (
+    <Modal show onHide={hideImportModal}>
+      <Modal.Header closeButton>
+        <Modal.Title>Import csv</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form encType="multipart/form-data" method="POST">
+          <div className="mb-3">
+            <label htmlFor="csvFile" className="form-label">
+              Select csv file
+            </label>
+            <input
+              type="file"
+              className="form-control"
+              id="csvFile"
+              accept=".csv"
+              required
+              onChange={(event) => {
+                if (event.target.files) {
+                  setUploadingFile(event.target.files[0]);
+                }
+              }}
+            />
+          </div>
+          <div className="d-flex justify-content-end">
+            <button
+              className="btn btn-primary"
+              onClick={async (event) => {
+                await uploadFile(event);
+                setImportModalVisibility(false);
+              }}
+            >
+              Import
+            </button>
+          </div>
+        </form>
+      </Modal.Body>
     </Modal>
   );
 
@@ -102,10 +154,16 @@ const BasicCRUDTable = ({
         >
           <div className="action d-flex">
             {hasImportCsv && (
-              <button className="btn btn-outline-success d-flex align-items-center me-2">
-                <BsUpload style={{ fontSize: "20px" }} className="me-2" />{" "}
-                Import csv
-              </button>
+              <>
+                <button
+                  className="btn btn-outline-success d-flex align-items-center me-2"
+                  onClick={showImportModal}
+                >
+                  <BsUpload style={{ fontSize: "20px" }} className="me-2" />
+                  Import csv
+                </button>
+                {importModalVisibility && importModal}
+              </>
             )}
             {hasExportPdf && (
               <button className="btn btn-outline-dark d-flex align-items-center">
@@ -169,7 +227,7 @@ const BasicCRUDTable = ({
                   </th>
                 );
               })}
-              <th scope="col">
+              <th scope="col" className="text-center">
                 <div>Actions</div> <div style={{ height: "30px" }}></div>
               </th>
             </tr>

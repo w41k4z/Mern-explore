@@ -6,6 +6,11 @@ const chartOfAccountSchema = new Schema({
   entitled: { type: String, required: true },
 });
 
+chartOfAccountSchema.index(
+  { accountNumber: 1, societyID: 1 },
+  { unique: true }
+);
+
 type ChartOfAccount = InferSchemaType<typeof chartOfAccountSchema>;
 
 export default model<ChartOfAccount>("ChartOfAccount", chartOfAccountSchema);

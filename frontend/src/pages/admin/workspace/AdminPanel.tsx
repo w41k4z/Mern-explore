@@ -5,7 +5,6 @@ import { BiPowerOff } from "react-icons/bi";
 /* COMPONENTS */
 import SidePanel from "../../../components/panel/SidePanel";
 import Information from "./content/Information";
-import Files from "./content/Files";
 import FinancialStatement from "./content/FinancialStatement";
 import GeneralChartOfAccount from "./content/GeneralChartOfAccount";
 import ThirdPartyChartOfAccount from "./content/ThirdPartyChartOfAccount";
@@ -13,19 +12,31 @@ import GeneralLedger from "./content/GeneralLedger";
 import JournalCode from "./content/JournalCode";
 import JournalTransactionRecord from "./content/JournalTransactionRecord";
 
+/* TYPE */
+import { Society } from "../../../models/society";
+import { UserAccount } from "../../../models/userAccount";
+
 /* STATIC DATA */
 import { AdminSidePanelContent } from "./staticData/AdminSidePanelContent";
 
 /* STYLES */
 import "../../../assets/css/AdminPanel.css";
+import { useEffect, useState } from "react";
+import Axios from "../../../http-client-side/Axios";
 
 const AdminPanel = () => {
-  const assets = require.context("../../../assets/upload/logo", true);
+  /* HOOKS */
+  const [society, setSociety] = useState<Society>({} as Society);
+  const [ceo, setCeo] = useState<UserAccount>({} as UserAccount);
+  useEffect(() => {
+    fetchProd();
+  }, []);
 
+  /* IMAGES */
+  const assets = require.context("../../../assets/upload/logo", true);
   interface Images {
     [key: string]: string;
   }
-
   const images: Images = {};
   assets.keys().forEach((filename: string) => {
     const image: string = assets(filename);
@@ -33,38 +44,26 @@ const AdminPanel = () => {
     images[name] = image;
   });
 
-  /* CONST DATA */
-  const society = {
-    name: "DIMPEX",
-    ceo: {
-      name: "Rakoto",
-      firstName: "Admin",
-      birthdate: new Date(),
-      email: "admin@gmail.com",
-      phoneNumber: "034 00 000 00",
-      password: "12345678",
-    },
-    logo: "perusahaan.png",
-    password: "12345678",
-    object:
-      "Dago Import Export est dans la place Huhu Dunno what to put here, just some random text Lorem Ipsum",
-    address: "Antananarivo",
-    headquarters: "Ensceinte ITU Andoharanofotsy",
-    creationDate: new Date(),
-    taxIdentificationNumber: undefined,
-    statisticalNumber: undefined,
-    commercialRegisterNumber: undefined,
-    status: undefined,
-    startDateOfAccountingPeriod: new Date(),
+  /* LOGIC */
+  const fetchProd = async () => {
+    await Axios.post("/api/society/prod")
+      .then(async (res1) => {
+        setSociety(res1.data);
+        const formData = new FormData();
+        formData.append("ceoID", res1.data.ceo);
+        await Axios.post("/api/user-account/user", formData)
+          .then((res2) => {
+            setCeo(res2.data);
+          })
+          .catch((error) => {
+            alert(error);
+          });
+      })
+      .catch((error) => {
+        alert(error);
+      });
   };
 
-  /* HOOKS SECTION */
-
-  /* HANDLERS SECTION */
-
-  /* ELEMENTS SECTION */
-
-  /* LOGIC SECTION */
   AdminSidePanelContent.map((item) => {
     item.onItemClick = () => {
       console.log(item.title + " clicked");
@@ -108,13 +107,14 @@ const AdminPanel = () => {
         <Routes>
           <Route
             path="/info"
-            element={<Information society={society} images={images} />}
+            element={
+              <Information society={society} ceo={ceo} images={images} />
+            }
           />
-          <Route path="/files" element={<Files />} />
           <Route path="/financial-statement" element={<FinancialStatement />} />
           <Route
             path="/chart-of-account/general"
-            element={<GeneralChartOfAccount />}
+            element={<GeneralChartOfAccount society={society} ceo={ceo} />}
           />
           <Route
             path="/chart-of-account/third-party"

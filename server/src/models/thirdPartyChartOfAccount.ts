@@ -4,7 +4,6 @@ const thirdPartyChartOfAccountSchema = new Schema({
   societyID: { type: Schema.Types.ObjectId, ref: "Society" },
   type: {
     type: String,
-    enum: ["CL", "FO"],
     required: true,
   },
   account: { type: String, required: true },
@@ -16,6 +15,6 @@ type ThirdPartyChartOfAccount = InferSchemaType<
 >;
 
 export default model<ThirdPartyChartOfAccount>(
-  "ChartOfAccount",
+  "ThirdPartyChartOfAccount",
   thirdPartyChartOfAccountSchema
 );

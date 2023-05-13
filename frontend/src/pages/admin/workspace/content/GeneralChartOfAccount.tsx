@@ -1,5 +1,8 @@
-/* COMPONENT */
+/* MODULES */
 import { useEffect, useState } from "react";
+import Axios from "../../../../http-client-side/Axios";
+
+/* COMPONENT */
 import { TableColumn } from "../../../../components/datatable/TableColumn";
 import BasicCRUDTable from "../../../../components/datatable/BasicCRUDTable";
 import Form from "../../../../components/form/Form";
@@ -9,45 +12,54 @@ import "../../../../assets/css/generalChartOfAccount.css";
 
 /* TYPE */
 import { ChartOfAccount } from "../../../../models/chartOfAccount";
+import { Society } from "../../../../models/society";
+import { UserAccount } from "../../../../models/userAccount";
 
-const GeneralChartOfAccount = () => {
+interface GeneralChartOfAccountProps {
+  society: Society;
+  ceo: UserAccount;
+}
+const GeneralChartOfAccount = ({
+  society,
+  ceo,
+}: GeneralChartOfAccountProps) => {
   /* HOOKS SECTION */
   const [chartOfAccounts, setCharOfAccounts] = useState<ChartOfAccount[]>([]);
   useEffect(() => {
-    const data = [
-      {
-        _id: "1",
-        accountNumber: "10000",
-        societyID: "123890r3u098314",
-        entitled: "Capital",
+    if (society._id) {
+      fetchAllChartOfAccount();
+    }
+  }, [society._id]);
+
+  /* LOGIC */
+  const fetchAllChartOfAccount = async () => {
+    const formData = new FormData();
+    formData.append("societyID", society._id);
+    await Axios.post("/api/chart-of-account/all-chart-of-account", formData)
+      .then((res) => {
+        setCharOfAccounts(res.data);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
+
+  const uploadChartOfAccount = async (csvFile: File) => {
+    const formData = new FormData();
+    formData.append("csvFile", csvFile);
+    formData.append("societyID", society._id);
+    await Axios.post("/api/chart-of-account/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
       },
-      {
-        _id: "2",
-        accountNumber: "20000",
-        societyID: "123890r3u098314",
-        entitled: "Huhu",
-      },
-      {
-        _id: "3",
-        accountNumber: "30000",
-        societyID: "123890r3u098314",
-        entitled: "Dette",
-      },
-      {
-        _id: "4",
-        accountNumber: "40000",
-        societyID: "123890r3u098314",
-        entitled: "Fournisseur",
-      },
-      {
-        _id: "5",
-        accountNumber: "40100",
-        societyID: "123890r3u098314",
-        entitled: "Client",
-      },
-    ];
-    setCharOfAccounts(data);
-  }, []);
+    })
+      .then((res) => {
+        fetchAllChartOfAccount();
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
 
   /* ELEMENT */
   const addModalForm = (
@@ -96,6 +108,17 @@ const GeneralChartOfAccount = () => {
       <Form
         inputs={[
           {
+            input: (
+              <input
+                type="hidden"
+                className="form-control"
+                id="chartOfAccountID"
+                value={row._id}
+                required
+              />
+            ),
+          },
+          {
             label: (
               <label htmlFor="accountNumber" className="form-label">
                 Account number
@@ -140,10 +163,12 @@ const GeneralChartOfAccount = () => {
     {
       name: "Account number",
       propTarget: "accountNumber",
+      format: "default",
     },
     {
       name: "Entitled",
       propTarget: "entitled",
+      format: "default",
     },
   ];
 
@@ -158,6 +183,7 @@ const GeneralChartOfAccount = () => {
       indexedRow
       addModalForm={addModalForm}
       updateModalForm={updateModalForm}
+      uploadCall={uploadChartOfAccount}
     />
   );
 };
