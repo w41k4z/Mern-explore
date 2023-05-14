@@ -113,9 +113,6 @@ export const fetchBySocietyID: RequestHandler<
     })
       .sort("accountNumber")
       .exec();
-    if (!chartOfAccounts) {
-      throw createHttpError(404, "Society not found");
-    }
     res.status(200).json(chartOfAccounts);
   } catch (error) {
     next(error);

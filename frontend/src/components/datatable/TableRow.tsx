@@ -99,6 +99,7 @@ const TableRow = ({
             className="btn btn-danger"
             onClick={() => {
               onDelete(row);
+              hideDeleteModal();
             }}
           >
             Delete

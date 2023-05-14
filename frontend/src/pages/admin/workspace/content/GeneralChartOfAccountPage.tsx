@@ -5,7 +5,6 @@ import Axios from "../../../../http-client-side/Axios";
 /* COMPONENT */
 import { TableColumn } from "../../../../components/datatable/TableColumn";
 import BasicCRUDTable from "../../../../components/datatable/BasicCRUDTable";
-import Form from "../../../../components/form/Form";
 
 /* STYLE */
 import "../../../../assets/css/generalChartOfAccount.css";
@@ -19,16 +18,17 @@ interface GeneralChartOfAccountProps {
   society: Society;
   ceo: UserAccount;
 }
-const GeneralChartOfAccount = ({
+const GeneralChartOfAccountPage = ({
   society,
   ceo,
 }: GeneralChartOfAccountProps) => {
   /* HOOKS SECTION */
-  const [chartOfAccounts, setCharOfAccounts] = useState<ChartOfAccount[]>([]);
+  const [chartOfAccounts, setChartOfAccounts] = useState<ChartOfAccount[]>([]);
   useEffect(() => {
     if (society._id) {
       fetchAllChartOfAccount();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [society._id]);
   const [newChartOfAccount, setNewChartOfAccount] = useState<ChartOfAccount>(
     {} as ChartOfAccount
@@ -42,7 +42,7 @@ const GeneralChartOfAccount = ({
     formData.append("societyID", society._id);
     await Axios.post("/api/chart-of-account/all-chart-of-account", formData)
       .then((res) => {
-        setCharOfAccounts(res.data);
+        setChartOfAccounts(res.data);
       })
       .catch((error) => {
         alert(error);
@@ -56,8 +56,8 @@ const GeneralChartOfAccount = ({
     formData.append("societyID", society._id);
     await Axios.post("/api/chart-of-account/create", formData)
       .then((res) => {
-        const allChartOfAccount = [...chartOfAccounts, newChartOfAccount];
-        setCharOfAccounts(allChartOfAccount);
+        const allChartOfAccount = [...chartOfAccounts, res.data];
+        setChartOfAccounts(allChartOfAccount);
         setNewChartOfAccount({} as ChartOfAccount);
       })
       .catch((error) => {
@@ -109,7 +109,7 @@ const GeneralChartOfAccount = ({
         const allChartOfAccount = chartOfAccounts.filter(
           (account) => account._id !== chartOfAccount._id
         );
-        setCharOfAccounts(allChartOfAccount);
+        setChartOfAccounts(allChartOfAccount);
       })
       .catch((error) => {
         alert(error);
@@ -242,4 +242,4 @@ const GeneralChartOfAccount = ({
   );
 };
 
-export default GeneralChartOfAccount;
+export default GeneralChartOfAccountPage;

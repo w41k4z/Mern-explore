@@ -43,6 +43,13 @@ export const AdminSidePanelContent = [
     onItemClick: () => {},
   },
   {
+    title: "Reference document",
+    type: "nav-item",
+    path: "/society/journal/reference-document",
+    icon: <BoxIcon.BiDetail />,
+    onItemClick: () => {},
+  },
+  {
     title: "Code",
     type: "nav-item",
     path: "/society/journal/code",

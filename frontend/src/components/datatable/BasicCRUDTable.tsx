@@ -305,7 +305,7 @@ const BasicCRUDTable = ({
           <tbody className="px-2">
             {filteredData.length === 0 && (
               <tr>
-                {indexedRow && <td></td>}
+                {indexedRow && <td>0</td>}
                 {columns.map((column, index) => {
                   return (
                     <td

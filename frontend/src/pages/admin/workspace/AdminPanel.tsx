@@ -6,10 +6,11 @@ import { BiPowerOff } from "react-icons/bi";
 import SidePanel from "../../../components/panel/SidePanel";
 import Information from "./content/Information";
 import FinancialStatement from "./content/FinancialStatement";
-import GeneralChartOfAccount from "./content/GeneralChartOfAccount";
-import ThirdPartyChartOfAccount from "./content/ThirdPartyChartOfAccount";
+import GeneralChartOfAccountPage from "./content/GeneralChartOfAccountPage";
+import ThirdPartyChartOfAccountPage from "./content/ThirdPartyChartOfAccountPage";
 import GeneralLedger from "./content/GeneralLedger";
-import JournalCode from "./content/JournalCode";
+import ReferenceDocumentPage from "./content/ReferenceDocumentPage";
+import JournalCodePage from "./content/JournalCodePage";
 import JournalTransactionRecord from "./content/JournalTransactionRecord";
 
 /* TYPE */
@@ -115,14 +116,23 @@ const AdminPanel = () => {
           <Route path="/financial-statement" element={<FinancialStatement />} />
           <Route
             path="/chart-of-account/general"
-            element={<GeneralChartOfAccount society={society} ceo={ceo} />}
+            element={<GeneralChartOfAccountPage society={society} ceo={ceo} />}
           />
           <Route
             path="/chart-of-account/third-party"
-            element={<ThirdPartyChartOfAccount />}
+            element={
+              <ThirdPartyChartOfAccountPage society={society} ceo={ceo} />
+            }
           />
           <Route path="/general-ledger" element={<GeneralLedger />} />
-          <Route path="/journal/code" element={<JournalCode />} />
+          <Route
+            path="/journal/reference-document"
+            element={<ReferenceDocumentPage society={society} ceo={ceo} />}
+          />
+          <Route
+            path="/journal/code"
+            element={<JournalCodePage society={society} ceo={ceo} />}
+          />
           <Route
             path="/journal/transaction-record"
             element={<JournalTransactionRecord />}
