@@ -11,7 +11,7 @@ import ThirdPartyChartOfAccountPage from "./content/ThirdPartyChartOfAccountPage
 import GeneralLedger from "./content/GeneralLedger";
 import ReferenceDocumentPage from "./content/ReferenceDocumentPage";
 import JournalCodePage from "./content/JournalCodePage";
-import JournalTransactionRecord from "./content/JournalTransactionRecord";
+import JournalTransactionRecordPage from "./content/JournalTransactionRecordPage";
 
 /* TYPE */
 import { Society } from "../../../models/society";
@@ -108,7 +108,7 @@ const AdminPanel = () => {
         </header>
         <Routes>
           <Route
-            path="/info"
+            path="/"
             element={
               <Information society={society} ceo={ceo} images={images} />
             }
@@ -135,7 +135,9 @@ const AdminPanel = () => {
           />
           <Route
             path="/journal/transaction-record"
-            element={<JournalTransactionRecord />}
+            element={
+              <JournalTransactionRecordPage society={society} ceo={ceo} />
+            }
           />
         </Routes>
         <footer>

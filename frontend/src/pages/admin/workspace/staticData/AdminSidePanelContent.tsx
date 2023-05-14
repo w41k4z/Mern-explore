@@ -15,7 +15,7 @@ export const AdminSidePanelContent = [
     title: "Informations",
     type: "nav-item",
     icon: <BoxIcon.BiInfoCircle />,
-    path: "/society/info",
+    path: "/society/",
     onItemClick: () => {},
   },
   {

@@ -19,7 +19,7 @@ interface IJournal extends Document {
   details: IDetail[];
 }
 
-/* Specifiv Validators */
+/* Specific Validators */
 const journalDateValidator = async function (this: IJournal, value: Date) {
   const societyID = this.society;
   const accoutingPeriod = await AccountingPeriodModel.findOne(
@@ -60,13 +60,17 @@ const journalSchema = new Schema({
     },
   },
   code: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: "JournalCode",
+    localField: "code",
+    foreignField: "code",
     required: true,
   },
   reference: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: "ReferenceDocument",
+    localField: "reference",
+    foreignField: "reference",
     required: true,
   },
   refNumber: { type: String, required: true, minLength: 1, maxLength: 11 },
@@ -74,11 +78,17 @@ const journalSchema = new Schema({
     {
       generalAccount: {
         type: String,
+        ref: "ChartOfAccount",
+        localField: "generalAccount",
+        foreignField: "accountNumber",
         required: true,
-        minLength: 5,
-        maxLength: 5,
       },
-      thirdPartyAccount: { type: String },
+      thirdPartyAccount: {
+        type: String,
+        ref: "ThirdPartyAccount",
+        localField: "thirdPartyAccount",
+        foreignField: "account",
+      },
       description: {
         type: String,
         required: true,

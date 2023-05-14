@@ -8,7 +8,7 @@ const thirdPartyChartOfAccountSchema = new Schema({
     maxLength: 2,
     required: true,
   },
-  account: { type: String, required: true },
+  account: { type: String, required: true, unique: true },
   entitled: { type: String },
 });
 
