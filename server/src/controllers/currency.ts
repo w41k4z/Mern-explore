@@ -1,13 +1,13 @@
 import { RequestHandler } from "express";
 import CurrencyModel from "../models/currency";
 
-export const create: RequestHandler<any, any, any, { label?: string }> = async (
+export const create: RequestHandler<any, any, { label: string }, any> = async (
   req,
   res,
   next
 ) => {
-  const { label } = req.query;
   try {
+    const { label } = req.body;
     if (label?.length !== 3) {
       throw new Error("Label must be 3 characters long");
     }
@@ -21,11 +21,11 @@ export const create: RequestHandler<any, any, any, { label?: string }> = async (
 export const remove: RequestHandler<
   any,
   any,
-  any,
-  { currencyID?: string }
+  { currencyID: string },
+  any
 > = async (req, res, next) => {
-  const { currencyID } = req.query;
   try {
+    const { currencyID } = req.body;
     const currency = await CurrencyModel.findByIdAndDelete({
       _id: currencyID,
     }).exec();
@@ -41,14 +41,14 @@ export const remove: RequestHandler<
 export const update: RequestHandler<
   any,
   any,
-  any,
   {
-    currencyID?: string;
-    label?: string;
-  }
+    currencyID: string;
+    label: string;
+  },
+  any
 > = async (req, res, next) => {
-  const { currencyID, label } = req.query;
   try {
+    const { currencyID, label } = req.query;
     const dbCurrency = await CurrencyModel.findOne({ _id: currencyID }).exec();
     if (!dbCurrency) {
       throw new Error("Currency not found.");

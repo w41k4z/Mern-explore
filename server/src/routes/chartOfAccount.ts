@@ -7,7 +7,7 @@ const router = express.Router();
 const upload = multer({ dest: "uploads/" });
 
 router.post("/create", ChartOfAccountController.create);
-router.post("/remove", ChartOfAccountController.remove);
+router.post("/delete", ChartOfAccountController.remove);
 router.post("/update", ChartOfAccountController.update);
 router.post(
   "/upload",

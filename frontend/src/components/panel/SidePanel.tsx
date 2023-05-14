@@ -17,15 +17,17 @@ interface SidePanelProps {
     path?: string;
     onItemClick: () => void;
   }[];
+  currentPageIndex: number;
 }
 
 const SidePanel = ({
   bootstrapClass = "d-flex flex-column flex-shrink-0 p-3 bg-light sticky-top",
   header,
   panelItems,
+  currentPageIndex,
 }: SidePanelProps) => {
   /* HOOKS SECTION */
-  const [activeItem, setActiveItem] = useState(-1);
+  const [activeItem, setActiveItem] = useState(currentPageIndex);
 
   return (
     <div className={bootstrapClass} style={panelStaticStyle}>

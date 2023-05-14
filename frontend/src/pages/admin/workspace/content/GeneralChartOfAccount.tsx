@@ -30,6 +30,11 @@ const GeneralChartOfAccount = ({
       fetchAllChartOfAccount();
     }
   }, [society._id]);
+  const [newChartOfAccount, setNewChartOfAccount] = useState<ChartOfAccount>(
+    {} as ChartOfAccount
+  );
+  const [chartOfAccountToUpdate, setChartOfAccountToUpdate] =
+    useState<ChartOfAccount>({} as ChartOfAccount);
 
   /* LOGIC */
   const fetchAllChartOfAccount = async () => {
@@ -44,6 +49,21 @@ const GeneralChartOfAccount = ({
       });
   };
 
+  const addChartOfAccount = async () => {
+    const formData = new FormData();
+    formData.append("accountNumber", newChartOfAccount.accountNumber);
+    formData.append("entitled", newChartOfAccount.entitled);
+    formData.append("societyID", society._id);
+    await Axios.post("/api/chart-of-account/create", formData)
+      .then((res) => {
+        const allChartOfAccount = [...chartOfAccounts, newChartOfAccount];
+        setCharOfAccounts(allChartOfAccount);
+        setNewChartOfAccount({} as ChartOfAccount);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
   const uploadChartOfAccount = async (csvFile: File) => {
     const formData = new FormData();
     formData.append("csvFile", csvFile);
@@ -60,103 +80,134 @@ const GeneralChartOfAccount = ({
         alert(error);
       });
   };
+  const updateChartOfAccount = async (chartOfAccount: ChartOfAccount) => {
+    chartOfAccountToUpdate._id = chartOfAccount._id;
+    chartOfAccountToUpdate.accountNumber = chartOfAccount.accountNumber;
+    if (chartOfAccountToUpdate.entitled === undefined)
+      chartOfAccountToUpdate.entitled = chartOfAccount.entitled;
+    const formData = new FormData();
+    formData.append("entitled", chartOfAccountToUpdate.entitled);
+    formData.append("chartOfAccountID", chartOfAccountToUpdate._id);
+    await Axios.post("/api/chart-of-account/update", formData)
+      .then((res) => {
+        chartOfAccounts.forEach((account, index) => {
+          if (account._id === chartOfAccount._id) {
+            chartOfAccounts[index] = chartOfAccountToUpdate;
+          }
+        });
+        setChartOfAccountToUpdate({} as ChartOfAccount);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
+  const deleteChartOfAccount = async (chartOfAccount: ChartOfAccount) => {
+    const formData = new FormData();
+    formData.append("chartOfAccountID", chartOfAccount._id);
+    await Axios.post("/api/chart-of-account/delete", formData)
+      .then((res) => {
+        const allChartOfAccount = chartOfAccounts.filter(
+          (account) => account._id !== chartOfAccount._id
+        );
+        setCharOfAccounts(allChartOfAccount);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
 
   /* ELEMENT */
-  const addModalForm = (
-    <Form
-      inputs={[
-        {
-          label: (
-            <label htmlFor="accountNumber" className="form-label">
-              Account number
-            </label>
-          ),
-          input: (
-            <input
-              type="text"
-              className="form-control"
-              id="accountNumber"
-              maxLength={5}
-              minLength={5}
-              required
-            />
-          ),
-        },
-        {
-          label: (
-            <label htmlFor="entitled" className="form-label">
-              Entitled
-            </label>
-          ),
-          input: (
-            <input
-              type="text"
-              className="form-control"
-              id="entitled"
-              required
-            />
-          ),
-        },
-      ]}
-      action={""}
-      method={""}
-      validButton={<button className="btn btn-primary">Confirm</button>}
-    />
-  );
-  const updateModalForm = (row: ChartOfAccount) => {
-    return (
-      <Form
-        inputs={[
-          {
-            input: (
-              <input
-                type="hidden"
-                className="form-control"
-                id="chartOfAccountID"
-                value={row._id}
-                required
-              />
-            ),
-          },
-          {
-            label: (
-              <label htmlFor="accountNumber" className="form-label">
-                Account number
-              </label>
-            ),
-            input: (
-              <input
-                type="text"
-                className="form-control"
-                id="accountNumber"
-                defaultValue={row.accountNumber}
-                required
-              />
-            ),
-          },
-          {
-            label: (
-              <label htmlFor="entitled" className="form-label">
-                Entitled
-              </label>
-            ),
-            input: (
-              <input
-                type="text"
-                className="form-control"
-                id="entitled"
-                defaultValue={row.entitled}
-                required
-              />
-            ),
-          },
-        ]}
-        action={""}
-        method={""}
-        validButton={<button className="btn btn-primary">Confirm</button>}
-      />
-    );
-  };
+  const addModalFormInputs = [
+    {
+      label: (
+        <label htmlFor="accountNumber" className="form-label">
+          Account number
+        </label>
+      ),
+      input: (
+        <input
+          type="text"
+          className="form-control"
+          id="accountNumber"
+          maxLength={5}
+          minLength={5}
+          onChange={(event) => {
+            newChartOfAccount.accountNumber = event.target.value;
+          }}
+          required
+        />
+      ),
+    },
+    {
+      label: (
+        <label htmlFor="entitled" className="form-label">
+          Entitled
+        </label>
+      ),
+      input: (
+        <input
+          type="text"
+          className="form-control"
+          id="entitled"
+          onChange={(event) => {
+            newChartOfAccount.entitled = event.target.value;
+          }}
+          required
+        />
+      ),
+    },
+  ];
+  const updateModalFormInputs = (row: ChartOfAccount) => [
+    {
+      input: (
+        <input
+          type="hidden"
+          className="form-control"
+          id="chartOfAccountID"
+          value={row._id}
+          required
+        />
+      ),
+    },
+    {
+      label: (
+        <label htmlFor="accountNumber" className="form-label">
+          Account number
+        </label>
+      ),
+      input: (
+        <input
+          type="text"
+          className="form-control"
+          id="accountNumber"
+          defaultValue={row.accountNumber}
+          onChange={(event) => {
+            chartOfAccountToUpdate.accountNumber = event.target.value;
+          }}
+          disabled
+        />
+      ),
+    },
+    {
+      label: (
+        <label htmlFor="entitled" className="form-label">
+          Entitled
+        </label>
+      ),
+      input: (
+        <input
+          type="text"
+          className="form-control"
+          id="entitled"
+          defaultValue={row.entitled}
+          onChange={(event) => {
+            chartOfAccountToUpdate.entitled = event.target.value;
+          }}
+          required
+        />
+      ),
+    },
+  ];
 
   /* CONST DATA */
   const columns: TableColumn[] = [
@@ -181,8 +232,11 @@ const GeneralChartOfAccount = ({
       hasImportCsv
       hasExportPdf
       indexedRow
-      addModalForm={addModalForm}
-      updateModalForm={updateModalForm}
+      addModalFormInputs={addModalFormInputs}
+      onAdd={addChartOfAccount}
+      onUpdate={updateChartOfAccount}
+      onDelete={deleteChartOfAccount}
+      updateModalFormInputs={updateModalFormInputs}
       uploadCall={uploadChartOfAccount}
     />
   );

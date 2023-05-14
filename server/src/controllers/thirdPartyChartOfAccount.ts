@@ -5,11 +5,11 @@ import ThirdPartyChartOfAccountModel from "../models/thirdPartyChartOfAccount";
 export const create: RequestHandler<
   any,
   any,
-  any,
-  { societyID?: string; type?: string; account?: string; entitled?: string }
+  { societyID: string; type: string; account: string; entitled: string },
+  any
 > = async (req, res, next) => {
-  const { societyID, type, account, entitled } = req.query;
   try {
+    const { societyID, type, account, entitled } = req.body;
     const dbSociety = await SocietyModel.findById(societyID).exec();
     if (!dbSociety) {
       throw new Error("Society not found.");
@@ -31,18 +31,18 @@ export const create: RequestHandler<
 export const update: RequestHandler<
   any,
   any,
-  any,
   {
     thirdPartyChartOfAccountID?: string;
     societyID?: string;
     type: string;
     account: string;
     entitled?: string;
-  }
+  },
+  any
 > = async (req, res, next) => {
-  const { thirdPartyChartOfAccountID, societyID, type, account, entitled } =
-    req.query;
   try {
+    const { thirdPartyChartOfAccountID, societyID, type, account, entitled } =
+      req.body;
     const dbSociety = await SocietyModel.findById(societyID).exec();
     if (!dbSociety) {
       throw new Error("Society not found.");
@@ -73,11 +73,11 @@ export const update: RequestHandler<
 export const remove: RequestHandler<
   any,
   any,
-  any,
-  { thirdPartyChartOfAccountID?: string }
+  { thirdPartyChartOfAccountID: string },
+  any
 > = async (req, res, next) => {
-  const { thirdPartyChartOfAccountID } = req.query;
   try {
+    const { thirdPartyChartOfAccountID } = req.body;
     const thirdPartyChartOfAccount =
       await ThirdPartyChartOfAccountModel.findByIdAndDelete({
         _id: thirdPartyChartOfAccountID,

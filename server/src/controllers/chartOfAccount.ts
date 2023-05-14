@@ -1,21 +1,21 @@
-import { RequestHandler, response } from "express";
+import { RequestHandler } from "express";
 import ChartOfAccountModel from "../models/chartOfAccount";
 import SocietyModel from "../models/society";
 import csvToJson from "csvtojson";
 import createHttpError from "http-errors";
 
 interface createBody {
-  societyID?: string;
-  accountNumber?: string;
-  entitled?: string;
+  societyID: string;
+  accountNumber: string;
+  entitled: string;
 }
 export const create: RequestHandler<any, any, createBody, any> = async (
   req,
   res,
   next
 ) => {
-  const { societyID, accountNumber, entitled } = req.body;
   try {
+    const { societyID, accountNumber, entitled } = req.body;
     const dbSociety = await SocietyModel.findById(societyID);
     if (!dbSociety) {
       throw new Error("Society not found");
@@ -56,11 +56,11 @@ export const upload: RequestHandler = async (req, res, next) => {
 export const remove: RequestHandler<
   any,
   any,
-  { chartOfAccountID?: string },
+  { chartOfAccountID: string },
   any
 > = async (req, res, next) => {
-  const { chartOfAccountID } = req.query;
   try {
+    const { chartOfAccountID } = req.body;
     const dbChartOfAccount = await ChartOfAccountModel.findByIdAndDelete(
       chartOfAccountID
     );
@@ -74,25 +74,21 @@ export const remove: RequestHandler<
 };
 
 interface updateBody {
-  chartOfAccountID?: string;
-  accountNumber?: string;
-  entitled?: string;
+  chartOfAccountID: string;
+  entitled: string;
 }
 export const update: RequestHandler<any, any, updateBody, any> = async (
   req,
   res,
   next
 ) => {
-  const { chartOfAccountID, accountNumber, entitled } = req.body;
   try {
+    const { chartOfAccountID, entitled } = req.body;
     const dbChartOfAccount = await ChartOfAccountModel.findById(
       chartOfAccountID
     );
     if (!dbChartOfAccount) {
       throw new Error("Chart of account not found");
-    }
-    if (accountNumber) {
-      dbChartOfAccount.accountNumber = accountNumber;
     }
     if (entitled) {
       dbChartOfAccount.entitled = entitled;
@@ -110,11 +106,13 @@ export const fetchBySocietyID: RequestHandler<
   { societyID: string },
   any
 > = async (req, res, next) => {
-  const { societyID } = req.body;
   try {
+    const { societyID } = req.body;
     const chartOfAccounts = await ChartOfAccountModel.find({
       societyID: societyID,
-    }).exec();
+    })
+      .sort("accountNumber")
+      .exec();
     if (!chartOfAccounts) {
       throw createHttpError(404, "Society not found");
     }

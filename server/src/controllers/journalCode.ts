@@ -4,11 +4,11 @@ import JournalCodeModel from "../models/journalCode";
 export const create: RequestHandler<
   any,
   any,
-  any,
-  { code?: string; entitled?: string }
+  { code: string; entitled: string },
+  any
 > = async (req, res, next) => {
-  const { code, entitled } = req.query;
   try {
+    const { code, entitled } = req.body;
     if (code?.length !== 2) {
       throw new Error("Code must be 2 characters long");
     }
@@ -25,11 +25,11 @@ export const create: RequestHandler<
 export const remove: RequestHandler<
   any,
   any,
-  any,
-  { journalCodeID?: string }
+  { journalCodeID: string },
+  any
 > = async (req, res, next) => {
-  const { journalCodeID } = req.query;
   try {
+    const { journalCodeID } = req.body;
     const journalCode = await JournalCodeModel.findByIdAndDelete({
       _id: journalCodeID,
     }).exec();
@@ -45,11 +45,11 @@ export const remove: RequestHandler<
 export const update: RequestHandler<
   any,
   any,
-  any,
-  { journalCodeID?: string; code?: string; entitled?: string }
+  { journalCodeID: string; code?: string; entitled?: string },
+  any
 > = async (req, res, next) => {
-  const { journalCodeID, code, entitled } = req.query;
   try {
+    const { journalCodeID, code, entitled } = req.body;
     if (code?.length !== 2) {
       throw new Error("Code must be 2 characters long");
     }

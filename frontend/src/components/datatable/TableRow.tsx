@@ -11,7 +11,9 @@ interface TableRowProps {
   data: any;
   indexedRow: boolean;
   index: number;
-  updateModalForm: ReactNode;
+  updateModalFormInputs: { input: ReactNode; label?: ReactNode }[];
+  onUpdate: (row: any) => void;
+  onDelete: (row: any) => void;
   dataPropIDName: string;
 }
 
@@ -20,7 +22,9 @@ const TableRow = ({
   data,
   indexedRow,
   index,
-  updateModalForm,
+  updateModalFormInputs,
+  onUpdate,
+  onDelete,
   dataPropIDName,
 }: TableRowProps) => {
   /* HOOKS */
@@ -40,24 +44,65 @@ const TableRow = ({
         <Modal.Header closeButton>
           <Modal.Title>Update general chart of account</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{updateModalForm}</Modal.Body>
+        <Modal.Body>
+          <form>
+            {updateModalFormInputs.map((input, index) => {
+              return (
+                <div className="mb-3" key={"update-modal-input-" + index}>
+                  {input.label}
+                  {input.input}
+                </div>
+              );
+            })}
+            <div className="d-flex justify-content-end">
+              <div className="btn-group">
+                <button
+                  className="btn btn-secondary"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    hideUpdateModal();
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn btn-warning"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    onUpdate(row);
+                    setUpdateModalVisibility(false);
+                  }}
+                >
+                  Update
+                </button>
+              </div>
+            </div>
+          </form>
+        </Modal.Body>
       </Modal>
     );
   };
-  const deleteModal = (id: string) => (
+  const deleteModal = (row: any) => (
     <Modal show onHide={hideDeleteModal} centered>
       <Modal.Body
         className="text-center"
         style={{ fontStyle: "bold", fontSize: "25px" }}
       >
-        Are you sure you want to delete this ? {id}
+        Are you sure you want to delete this ?
       </Modal.Body>
       <Modal.Footer>
         <div className="btn-group">
           <button className="btn btn-secondary" onClick={hideDeleteModal}>
             Cancel
           </button>
-          <button className="btn btn-danger">Delete</button>
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              onDelete(row);
+            }}
+          >
+            Delete
+          </button>
         </div>
       </Modal.Footer>
     </Modal>
@@ -83,14 +128,25 @@ const TableRow = ({
         );
       })}
       <td className="btn-group">
-        <button className="btn btn-outline-warning" onClick={showUpdateModal}>
+        <button
+          className="btn btn-outline-warning"
+          onClick={() => {
+            showUpdateModal();
+          }}
+        >
           <BiEditAlt />
         </button>
         {updateModalVisibility && updateModal(data)}
-        <button className="btn btn-outline-danger" onClick={showDeleteModal}>
+        <button
+          className="btn btn-outline-danger"
+          onClick={(event) => {
+            event.preventDefault();
+            showDeleteModal();
+          }}
+        >
           <BiTrash />
         </button>
-        {deleteModalVisibility && deleteModal(data[dataPropIDName])}
+        {deleteModalVisibility && deleteModal(data)}
       </td>
     </tr>
   );

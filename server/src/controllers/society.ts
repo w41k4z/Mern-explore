@@ -4,11 +4,11 @@ import SocietyModel from "../models/society";
 export const authenticate: RequestHandler<
   any,
   any,
-  { societyID?: string; password?: string },
+  { societyID: string; password: string },
   any
 > = async (req, res, next) => {
-  const { societyID, password } = req.body;
   try {
+    const { societyID, password } = req.body;
     if (!societyID || !password) {
       throw new Error("Missing parameter.");
     }
@@ -28,7 +28,7 @@ export const authenticate: RequestHandler<
 };
 
 interface updateBody {
-  societyID?: string;
+  societyID: string;
   name?: string;
   logo?: string;
   password?: string;
@@ -44,19 +44,19 @@ export const update: RequestHandler<any, any, updateBody, any> = async (
   res,
   next
 ) => {
-  const {
-    societyID,
-    name,
-    logo,
-    password,
-    address,
-    headquarters,
-    taxIdentificationNumber,
-    statisticalNumber,
-    commercialRegisterNumber,
-    status,
-  } = req.body;
   try {
+    const {
+      societyID,
+      name,
+      logo,
+      password,
+      address,
+      headquarters,
+      taxIdentificationNumber,
+      statisticalNumber,
+      commercialRegisterNumber,
+      status,
+    } = req.body;
     const dbSociety = await SocietyModel.findById(societyID).exec();
     if (!dbSociety) {
       throw new Error("Society not found.");
@@ -96,14 +96,14 @@ export const update: RequestHandler<any, any, updateBody, any> = async (
 };
 
 interface createBody {
-  name?: string;
-  ceo?: string;
-  logo?: string;
-  password?: string;
-  object?: string;
-  address?: string;
-  headquarters?: string;
-  creationDate?: Date;
+  name: string;
+  ceo: string;
+  logo: string;
+  password: string;
+  object: string;
+  address: string;
+  headquarters: string;
+  creationDate: Date;
   taxIdentificationNumber?: string;
   statisticalNumber?: string;
   commercialRegisterNumber?: string;
@@ -116,23 +116,23 @@ export const create: RequestHandler<any, any, createBody, any> = async (
   res,
   next
 ) => {
-  const {
-    name,
-    ceo,
-    logo,
-    password,
-    object,
-    address,
-    headquarters,
-    creationDate,
-    taxIdentificationNumber,
-    statisticalNumber,
-    commercialRegisterNumber,
-    status,
-    startDateOfAccountingPeriod,
-    accountingCurrency,
-  } = req.body;
   try {
+    const {
+      name,
+      ceo,
+      logo,
+      password,
+      object,
+      address,
+      headquarters,
+      creationDate,
+      taxIdentificationNumber,
+      statisticalNumber,
+      commercialRegisterNumber,
+      status,
+      startDateOfAccountingPeriod,
+      accountingCurrency,
+    } = req.body;
     const society = new SocietyModel({
       name,
       ceo,

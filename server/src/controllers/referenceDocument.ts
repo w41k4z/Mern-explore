@@ -4,11 +4,11 @@ import ReferenceDocumentModel from "../models/referenceDocument";
 export const create: RequestHandler<
   any,
   any,
-  any,
-  { reference?: string; meaning?: string }
+  { reference: string; meaning: string },
+  any
 > = async (req, res, next) => {
-  const { reference, meaning } = req.query;
   try {
+    const { reference, meaning } = req.body;
     if (reference?.length !== 2) {
       throw new Error("Reference must be 2 characters long");
     }
@@ -25,11 +25,11 @@ export const create: RequestHandler<
 export const update: RequestHandler<
   any,
   any,
-  any,
-  { referenceDocumentID?: string; reference?: string; meaning?: string }
+  { referenceDocumentID: string; reference?: string; meaning?: string },
+  any
 > = async (req, res, next) => {
-  const { referenceDocumentID, reference, meaning } = req.query;
   try {
+    const { referenceDocumentID, reference, meaning } = req.body;
     if (reference?.length !== 2) {
       throw new Error("Reference must be 2 characters long");
     }
@@ -55,11 +55,11 @@ export const update: RequestHandler<
 export const remove: RequestHandler<
   any,
   any,
-  any,
-  { referenceDocumentID?: string }
+  { referenceDocumentID: string },
+  any
 > = async (req, res, next) => {
-  const { referenceDocumentID } = req.query;
   try {
+    const { referenceDocumentID } = req.body;
     const referenceDocument = await ReferenceDocumentModel.findByIdAndDelete({
       _id: referenceDocumentID,
     }).exec();

@@ -89,6 +89,7 @@ const AdminPanel = () => {
       <SidePanel
         header={AdminSidePanelHeader}
         panelItems={AdminSidePanelContent}
+        currentPageIndex={1}
       />
       <div className="main-content">
         <header

@@ -3,17 +3,16 @@ import UserAccountModel from "../models/userAccount";
 import createHttpError from "http-errors";
 
 interface signInBody {
-  email?: string;
-  rawPassword?: string;
+  email: string;
+  rawPassword: string;
 }
-export const signIn: RequestHandler<
-  unknown,
-  unknown,
-  signInBody,
-  unknown
-> = async (req, res, next) => {
-  const { email, rawPassword } = req.body;
+export const signIn: RequestHandler<any, any, signInBody, any> = async (
+  req,
+  res,
+  next
+) => {
   try {
+    const { email, rawPassword } = req.body;
     if (!email || !rawPassword) {
       throw createHttpError(
         400,
@@ -47,7 +46,7 @@ export const signIn: RequestHandler<
   }
 };
 
-interface createQuery {
+interface createBody {
   name: string;
   firstName?: string;
   birthdate: Date;
@@ -58,12 +57,12 @@ interface createQuery {
 export const create: RequestHandler<
   unknown,
   unknown,
-  unknown,
-  createQuery
+  createBody,
+  unknown
 > = async (req, res, next) => {
-  const { name, firstName, birthdate, email, phoneNumber, rawPassword } =
-    req.query;
   try {
+    const { name, firstName, birthdate, email, phoneNumber, rawPassword } =
+      req.body;
     const dbUserAccount = await UserAccountModel.findOne({
       email: email,
     }).exec();
@@ -96,8 +95,8 @@ export const getUserByID: RequestHandler<
   { ceoID: string },
   any
 > = async (req, res, next) => {
-  const { ceoID } = req.body;
   try {
+    const { ceoID } = req.body;
     const dimpexCeo = await UserAccountModel.findById(ceoID).exec();
     if (!dimpexCeo) {
       throw createHttpError(404, "User account not found");

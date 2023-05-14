@@ -1,5 +1,9 @@
-/* COMPONENT */
+/* MODULES */
 import { ReactNode, useEffect, useState } from "react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
+/* COMPONENT */
 import { BiPlus } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
 import { BsDownload, BsUpload, BsFilter } from "react-icons/bs";
@@ -15,8 +19,13 @@ interface BasicCRUDTableProps {
   indexedRow?: boolean;
   hasImportCsv?: boolean;
   hasExportPdf?: boolean;
-  addModalForm: ReactNode;
-  updateModalForm: (row: any) => ReactNode;
+  addModalFormInputs: { input: ReactNode; label: ReactNode }[];
+  onAdd: () => void;
+  onUpdate: (row: any) => void;
+  onDelete: (row: any) => void;
+  updateModalFormInputs: (
+    row: any
+  ) => { input: ReactNode; label?: ReactNode }[];
   uploadCall: (file: File) => void;
 }
 
@@ -28,19 +37,28 @@ const BasicCRUDTable = ({
   indexedRow = false,
   hasImportCsv = false,
   hasExportPdf = false,
-  addModalForm,
-  updateModalForm,
+  addModalFormInputs,
+  onAdd,
+  onUpdate,
+  onDelete,
+  updateModalFormInputs,
   uploadCall,
 }: BasicCRUDTableProps) => {
   /* HOOOKS */
   const [filters, setFilters] = useState<{ [key: string]: string }>();
+  const [filteredData, setFilteredData] = useState<any[]>([]);
   useEffect(() => {
     const arrFilters: { [key: string]: string } = {};
     for (const column of columns) {
       arrFilters[column.propTarget] = "";
     }
     setFilters(arrFilters);
+    setFilteredData(data);
   }, [columns, data]);
+  useEffect(() => {
+    filterData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters]);
   const [addModalVisibility, setAddModalVisibility] = useState(false);
   const [importModalVisibility, setImportModalVisibility] = useState(false);
   const [uploadingFile, setUploadingFile] = useState<File>();
@@ -75,9 +93,9 @@ const BasicCRUDTable = ({
           .includes(filters ? filters[column.propTarget].toLowerCase() : "");
       });
     }
-    return filteredData;
+    setFilteredData(filteredData);
   };
-  const handleFilter = (filter: string, value: string) => {
+  const handleFilter = async (filter: string, value: string) => {
     const arrFilter = { ...filters };
     arrFilter[filter] = value;
     setFilters({ ...arrFilter });
@@ -95,13 +113,62 @@ const BasicCRUDTable = ({
     uploadingFile && uploadCall(uploadingFile);
   };
 
+  const exportPDF = () => {
+    const unit = "pt";
+    const size = "A4"; // Use A1, A2, A3 or A4
+    const orientation = "portrait"; // portrait or landscape
+
+    const marginLeft = 40;
+    const doc = new jsPDF(orientation, unit, size);
+
+    doc.setFontSize(15);
+
+    const docTitle = title ? title : "Report";
+    const headers = [columns.map((column) => column.name)];
+
+    const data = filteredData.map((data) =>
+      columns.map((column) => data[column.propTarget])
+    );
+
+    let content = {
+      startY: 50,
+      head: headers,
+      body: data,
+    };
+
+    doc.text(docTitle, marginLeft, 40);
+    autoTable(doc, content);
+    doc.save(`${docTitle}.pdf`);
+  };
+
   /* ELEMENT */
   const addModal = (
     <Modal show onHide={hideAddModal}>
       <Modal.Header closeButton>
         <Modal.Title>Add new {title && title.toLowerCase()}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>{addModalForm}</Modal.Body>
+      <Modal.Body>
+        <form>
+          {addModalFormInputs.map((input, index) => (
+            <div className="mb-3" key={index}>
+              {input.label}
+              {input.input}
+            </div>
+          ))}
+          <div className="d-flex justify-content-end">
+            <button
+              className="btn btn-primary"
+              onClick={(event) => {
+                event.preventDefault();
+                onAdd();
+                setAddModalVisibility(false);
+              }}
+            >
+              Add
+            </button>
+          </div>
+        </form>
+      </Modal.Body>
     </Modal>
   );
   const importModal = (
@@ -166,7 +233,10 @@ const BasicCRUDTable = ({
               </>
             )}
             {hasExportPdf && (
-              <button className="btn btn-outline-dark d-flex align-items-center">
+              <button
+                className="btn btn-outline-dark d-flex align-items-center"
+                onClick={exportPDF}
+              >
                 <BsDownload style={{ fontSize: "20px" }} className="me-2" />{" "}
                 Export pdf
               </button>
@@ -233,7 +303,7 @@ const BasicCRUDTable = ({
             </tr>
           </thead>
           <tbody className="px-2">
-            {filterData().length === 0 && (
+            {filteredData.length === 0 && (
               <tr>
                 {indexedRow && <td></td>}
                 {columns.map((column, index) => {
@@ -251,7 +321,7 @@ const BasicCRUDTable = ({
                 <td></td>
               </tr>
             )}
-            {filterData().map((data, index) => (
+            {filteredData.map((data, index) => (
               <TableRow
                 key={"Table-row-" + index}
                 columns={columns}
@@ -259,7 +329,9 @@ const BasicCRUDTable = ({
                 dataPropIDName={dataPropIDName}
                 indexedRow={indexedRow}
                 index={index + 1}
-                updateModalForm={updateModalForm(data)}
+                updateModalFormInputs={updateModalFormInputs(data)}
+                onUpdate={onUpdate}
+                onDelete={onDelete}
               />
             ))}
           </tbody>
