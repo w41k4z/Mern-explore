@@ -12,6 +12,8 @@ import GeneralLedger from "./content/GeneralLedger";
 import ReferenceDocumentPage from "./content/ReferenceDocumentPage";
 import JournalCodePage from "./content/JournalCodePage";
 import JournalTransactionRecordPage from "./content/JournalTransactionRecordPage";
+import Balance from "./content/Balance";
+import DetailsOfGeneralLeadger from "./content/DetailsOfGeneralLedger";
 
 /* TYPE */
 import { Society } from "../../../models/society";
@@ -24,6 +26,7 @@ import { AdminSidePanelContent } from "./staticData/AdminSidePanelContent";
 import "../../../assets/css/AdminPanel.css";
 import { useEffect, useState } from "react";
 import Axios from "../../../http-client-side/Axios";
+import DetailsOfGeneralLedger from "./content/DetailsOfGeneralLedger";
 
 const AdminPanel = () => {
   /* HOOKS */
@@ -133,6 +136,9 @@ const AdminPanel = () => {
             path="/journal/code"
             element={<JournalCodePage society={society} ceo={ceo} />}
           />
+          <Route path="/balance" element={<Balance/>}/>
+          <Route path="/detail-of-general-ledger" element={<DetailsOfGeneralLeadger/>}/>
+
           <Route
             path="/journal/transaction-record"
             element={
