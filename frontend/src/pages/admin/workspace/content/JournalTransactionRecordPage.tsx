@@ -6,6 +6,8 @@ import Axios from "../../../../http-client-side/Axios";
 import { BiPlus } from "react-icons/bi";
 import { Modal } from "react-bootstrap";
 import { BsDownload, BsUpload } from "react-icons/bs";
+import { TableColumn } from "../../../../components/datatable/TableColumn";
+import BasicCRUDTable from "../../../../components/datatable/BasicCRUDTable";
 
 /* TYPE */
 import { JournalCode } from "../../../../models/journalCode";
@@ -13,11 +15,11 @@ import { Society } from "../../../../models/society";
 import { UserAccount } from "../../../../models/userAccount";
 import { Journal } from "../../../../models/journal";
 import { ReferenceDocument } from "../../../../models/referenceDocument";
-
-/* HELPER */
-import { formatDate } from "../../../../helpers/DateHelper";
 import { ChartOfAccount } from "../../../../models/chartOfAccount";
 import { ThirdPartyChartOfAccount } from "../../../../models/thirdPartyChartOfAccount";
+
+/* HELPER */
+import { formatDate, formatMonthYear } from "../../../../helpers/DateHelper";
 
 interface JournalTransactionRecordProps {
   society: Society;
@@ -32,6 +34,13 @@ const JournalTransactionRecordPage = ({
   const [selectedCode, setSelectedCode] = useState<JournalCode>(
     {} as JournalCode
   );
+  const [actualMonth, setActualMonth] = useState(new Date());
+  useEffect(() => {
+    if (society._id) {
+      fetchAllJournal();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCode, actualMonth]);
   const [references, setReferences] = useState<ReferenceDocument[]>([]);
   const [generalChartOfAccounts, setGeneralChartOfAccounts] = useState<
     ChartOfAccount[]
@@ -52,6 +61,7 @@ const JournalTransactionRecordPage = ({
   useEffect(() => {
     journal.code = selectedCode.code;
   }, [journal, selectedCode]);
+  const [journals, setJournals] = useState<Journal[]>([]);
   const [uploadingFile, setUploadingFile] = useState<File>();
   const [addModalVisibility, setAddModalVisibility] = useState(false);
   const [importModalVisibility, setImportModalVisibility] = useState(false);
@@ -62,6 +72,19 @@ const JournalTransactionRecordPage = ({
   const showImportModal = () => setImportModalVisibility(true);
   const hideImportModal = () => setImportModalVisibility(false);
 
+  const fetchAllJournal = () => {
+    const formData = new FormData();
+    formData.append("societyID", society._id);
+    formData.append("code", selectedCode.code);
+    formData.append("month", formatDate(actualMonth));
+    Axios.post("/api/journal/journals", formData)
+      .then((res) => {
+        setJournals(res.data);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
   const fetchAllCode = async () => {
     const formData = new FormData();
     formData.append("societyID", society._id);
@@ -528,6 +551,40 @@ const JournalTransactionRecordPage = ({
     </Modal>
   );
 
+  /* CONST DATA */
+  const columns: TableColumn[] = [
+    {
+      name: "Date",
+      propTarget: "date",
+      format: "default",
+    },
+    {
+      name: "Reference",
+      propTarget: "reference",
+      format: "default",
+    },
+    {
+      name: "General Account",
+      propTarget: "generalAccount",
+      format: "default",
+    },
+    {
+      name: "Third Party Account",
+      propTarget: "thirdPartyAccount",
+      format: "default",
+    },
+    {
+      name: "Debit",
+      propTarget: "debit",
+      format: "currency",
+    },
+    {
+      name: "Credit",
+      propTarget: "credit",
+      format: "currency",
+    },
+  ];
+
   return (
     <div className="m-4 bg-white">
       <div className="header p-4 d-sm-block d-md-flex justify-content-between">
@@ -546,7 +603,18 @@ const JournalTransactionRecordPage = ({
               </option>
             ))}
           </select>
-          <input type="month" className="ms-2 form-control-sm" />
+          <input
+            type="month"
+            value={
+              actualMonth
+                ? formatMonthYear(actualMonth)
+                : formatMonthYear(new Date())
+            }
+            className="ms-2 form-control-sm"
+            onChange={(event) => {
+              setActualMonth(new Date(event.target.value));
+            }}
+          />
         </div>
         <div className="rightHeader d-flex">
           <button
@@ -570,6 +638,29 @@ const JournalTransactionRecordPage = ({
           {addModalVisibility && addModal}
         </div>
       </div>
+      <BasicCRUDTable
+        columns={columns}
+        data={journals}
+        dataPropIDName={"_id"}
+        addModalFormInputs={[]}
+        onAdd={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+        onUpdate={function (row: any): void {
+          throw new Error("Function not implemented.");
+        }}
+        onDelete={function (row: any): void {
+          throw new Error("Function not implemented.");
+        }}
+        updateModalFormInputs={function (
+          row: any
+        ): { input: React.ReactNode; label?: React.ReactNode }[] {
+          throw new Error("Function not implemented.");
+        }}
+        uploadCall={function (file: File): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
     </div>
   );
 };

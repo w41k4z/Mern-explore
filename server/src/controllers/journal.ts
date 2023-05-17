@@ -148,3 +148,31 @@ export const fetchBySocietyID: RequestHandler<
     next(error);
   }
 };
+
+export const journals: RequestHandler<
+  any,
+  any,
+  { societyID: string; code: string; month: string },
+  any
+> = async (req, res, next) => {
+  try {
+    const { societyID, code, month } = req.body;
+    const [theMonth, theYear] = month.split("-").map((x) => parseInt(x));
+    console.log(
+      new Date(theYear, theMonth - 1, 1),
+      new Date(theYear, theMonth, 1)
+    );
+    const query = {
+      societyID,
+      date: {
+        $gte: new Date(theYear, theMonth - 1, 1), // Start of the month
+        $lt: new Date(theYear, theMonth, 1), // Start of the next month
+      },
+      journalCode: code,
+    };
+    const journals = await JournalModel.find(query).sort("date").exec();
+    res.status(200).json(journals);
+  } catch (error) {
+    next(error);
+  }
+};
