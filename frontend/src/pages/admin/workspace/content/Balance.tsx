@@ -105,7 +105,7 @@ const Balance = ({society,ceo}: BalanceProps) => {
     const headers = [["Account number","Entitled","Sum Debit","Sum Credit","Sold Debtor","Sold Creditor"]];
 
     const data = balance.map((account) =>
-      [account.generalAccount, account.entitled, account.sumCredit, account.sumDebit, account.sumDebit-account.sumCredit > 0 ? account.sumDebit-account.sumCredit : 0,(account.sumDebit-account.sumCredit)*(-1) > 0 ? (account.sumDebit-account.sumCredit)*(-1) : 0 ]
+      [account.generalAccount, account.entitled,account.sumDebit,account.sumCredit, account.sumDebit-account.sumCredit > 0 ? account.sumDebit-account.sumCredit : 0,(account.sumDebit-account.sumCredit)*(-1) > 0 ? (account.sumDebit-account.sumCredit)*(-1) : 0 ]
     );
 
     let content = {
