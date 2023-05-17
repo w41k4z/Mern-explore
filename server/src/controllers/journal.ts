@@ -3,7 +3,6 @@ import JournalModel from "../models/journal";
 import SocietyModel from "../models/society";
 import csvToJson from "csvtojson";
 import createHttpError from "http-errors";
-import AccountingPeriodModel from "../models/accountingPeriod";
 
 interface createBody {
   societyID: string;
