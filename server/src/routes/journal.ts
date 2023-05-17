@@ -10,6 +10,6 @@ router.post("/create", JournalController.create);
 // router.post("/delete", JournalController.remove);
 // router.post("/update", JournalController.update);
 router.post("/upload", upload.single("csvFile"), JournalController.upload);
-// router.post("/all-journal", JournalController.fetchBySocietyID);
+router.post("/all-journal", JournalController.fetchBySocietyID);
 
 export default router;
