@@ -130,21 +130,21 @@ export const upload: RequestHandler = async (req, res, next) => {
 //   }
 // };
 
-// export const fetchBySocietyID: RequestHandler<
-//   any,
-//   any,
-//   { societyID: string },
-//   any
-// > = async (req, res, next) => {
-//   try {
-//     const { societyID } = req.body;
-//     const chartOfAccounts = await ChartOfAccountModel.find({
-//       societyID: societyID,
-//     })
-//       .sort("accountNumber")
-//       .exec();
-//     res.status(200).json(chartOfAccounts);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+export const fetchBySocietyID: RequestHandler<
+  any,
+  any,
+  { societyID: string },
+  any
+> = async (req, res, next) => {
+  try {
+    const { societyID } = req.body;
+    const journals = await JournalModel.find({
+      societyID: societyID,
+    })
+      .sort("date")
+      .exec();
+    res.status(200).json(journals);
+  } catch (error) {
+    next(error);
+  }
+};
