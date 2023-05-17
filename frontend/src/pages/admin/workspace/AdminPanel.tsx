@@ -136,7 +136,7 @@ const AdminPanel = () => {
             path="/journal/code"
             element={<JournalCodePage society={society} ceo={ceo} />}
           />
-          <Route path="/balance" element={<Balance/>}/>
+          <Route path="/balance" element={<Balance society={society} ceo={ceo}/>}/>
           <Route path="/detail-of-general-ledger" element={<DetailsOfGeneralLeadger/>}/>
 
           <Route
