@@ -7,7 +7,7 @@ interface IAccountingPeriod extends Document {
 }
 
 const accountingPeriodSchema = new Schema({
-  society: { type: Schema.Types.ObjectId, ref: "Society" },
+  societyID: { type: Schema.Types.ObjectId, ref: "Society" },
   startDate: { type: Date, required: true },
   endDate: {
     type: Date,
