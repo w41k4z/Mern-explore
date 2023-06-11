@@ -76,6 +76,20 @@ export const AdminSidePanelContent = [
     onItemClick: () => {},
   },
   {
+    title: "Balance",
+    type: "nav-item",
+    path: "/society/balance",
+    icon: <BoxIcon.BiBook />,
+    onItemClick: () => {},
+  },
+  {
+    title: "Details of General legder",
+    type: "nav-item",
+    path: "/society/detail-of-general-ledger",
+    icon: <BoxIcon.BiBook />,
+    onItemClick: () => {},
+  },
+  {
     title: "Financial statements",
     type: "nav-item",
     path: "/society/financial-statement",
