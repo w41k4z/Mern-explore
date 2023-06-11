@@ -50,7 +50,7 @@ const detailsBalanceValidator = function (details: IDetail[]) {
 
 /* Schema */
 const journalSchema = new Schema({
-  society: { type: Schema.Types.ObjectId, ref: "Society" },
+  societyID: { type: Schema.Types.ObjectId, ref: "Society" },
   date: {
     type: Date,
     required: true,
@@ -74,6 +74,12 @@ const journalSchema = new Schema({
     required: true,
   },
   refNumber: { type: String, required: true, minLength: 1, maxLength: 11 },
+  description: {
+    type: String,
+    required: true,
+    minLength: 1,
+    maxLength: 32,
+  },
   details: [
     {
       generalAccount: {
@@ -89,16 +95,11 @@ const journalSchema = new Schema({
         localField: "thirdPartyAccount",
         foreignField: "account",
       },
-      description: {
-        type: String,
-        required: true,
-        minLength: 1,
-        maxLength: 32,
-      },
       debit: { type: Number, min: [0, "Value can not be negative"] },
       credit: { type: Number, min: [0, "Value can not be negative"] },
     },
   ],
+  isClosed: { type: Boolean, default: false },
 });
 journalSchema.path("details").validate(detailsBalanceValidator);
 

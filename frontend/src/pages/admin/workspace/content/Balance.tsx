@@ -5,16 +5,13 @@ import autoTable from "jspdf-autotable";
 
 /* STYLES */
 import "../../../../assets/css/balance.css";
-import { BiPlus } from "react-icons/bi";
-import { AiOutlineClose } from "react-icons/ai";
-import { BsDownload, BsUpload, BsFilter } from "react-icons/bs";
+import { BsDownload } from "react-icons/bs";
 
 /* TYPE */
 import { ChartOfAccount } from "../../../../models/chartOfAccount";
 import { Society } from "../../../../models/society";
 import { UserAccount } from "../../../../models/userAccount";
 import { Journal } from "../../../../models/journal";
-import { all } from "axios";
 
 interface BalanceProps {
   society: Society;
@@ -27,6 +24,7 @@ const Balance = ({ society, ceo }: BalanceProps) => {
   useEffect(() => {
     fetchAllChartOfAccount();
     fetchAllJournal();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [society._id]);
   const [balance, setBalance] = useState<
     {
@@ -38,6 +36,7 @@ const Balance = ({ society, ceo }: BalanceProps) => {
   >([]);
   useEffect(() => {
     getBalance();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [generalAccounts, journals]);
 
   /* LOGIC */
@@ -72,6 +71,7 @@ const Balance = ({ society, ceo }: BalanceProps) => {
       sumCredit: number;
     }[] = [];
 
+    // eslint-disable-next-line array-callback-return
     generalAccounts.map((account) => {
       const toPush = {
         generalAccount: account.accountNumber,
@@ -79,7 +79,9 @@ const Balance = ({ society, ceo }: BalanceProps) => {
         sumDebit: 0,
         sumCredit: 0,
       };
+      // eslint-disable-next-line array-callback-return
       journals.map((journal) => {
+        // eslint-disable-next-line array-callback-return
         journal.details.map((detail) => {
           if (detail.generalAccount === account.accountNumber) {
             toPush.sumDebit += detail.debit ? detail.debit : 0;
@@ -151,65 +153,65 @@ const Balance = ({ society, ceo }: BalanceProps) => {
             pdf
           </button>
         </div>
-        <table className="table table-striped ">
-          <thead className="px-2 table-bordered table-dark">
-            <tr className="text-white">
-              <th scope="col">#.</th>
-              <th scope="col">Account number</th>
-              <th scope="col">Entitled</th>
-              <th colSpan={2} className="colspan">
-                <table className="tab">
-                  <tr>
-                    <th colSpan={2} className="text-center">
-                      Sum
-                    </th>
-                  </tr>
-                  <tr>
-                    <th className="text-center">Debit</th>
-                    <th className="text-center">Credit</th>
-                  </tr>
-                </table>
-              </th>
-              <th colSpan={2} className="colspan">
-                <table className="tab">
-                  <tr>
-                    <th colSpan={2}>
-                      <center>Sold</center>
-                    </th>
-                  </tr>
-                  <tr>
-                    <th className="text-center">Debtor</th>
-                    <th className="text-center">Creditor</th>
-                  </tr>
-                </table>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="px-2">
-            {balance.map((account, index) => {
-              return (
-                <tr>
-                  <th>{index + 1}.</th>
-                  <td className="text-center">{account.generalAccount}</td>
-                  <td className="text-center">{account.entitled}</td>
-                  <td className="text-center">{account.sumDebit}</td>
-                  <td className="text-center">{account.sumCredit}</td>
-                  <td className="text-center">
-                    {account.sumDebit - account.sumCredit > 0
-                      ? account.sumDebit - account.sumCredit
-                      : 0}
-                  </td>
-                  <td className="text-center">
-                    {(account.sumDebit - account.sumCredit) * -1 > 0
-                      ? (account.sumDebit - account.sumCredit) * -1
-                      : 0}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
       </div>
+      <table className="table table-striped">
+        <thead className="px-2 table-bordered table-dark">
+          <tr className="text-white">
+            <th scope="col">#.</th>
+            <th scope="col">Account number</th>
+            <th scope="col">Entitled</th>
+            <th colSpan={2} className="colspan">
+              <table className="tab">
+                <tr>
+                  <th colSpan={2} className="text-center">
+                    Sum
+                  </th>
+                </tr>
+                <tr>
+                  <th className="text-center">Debit</th>
+                  <th className="text-center">Credit</th>
+                </tr>
+              </table>
+            </th>
+            <th colSpan={2} className="colspan">
+              <table className="tab">
+                <tr>
+                  <th colSpan={2}>
+                    <center>Sold</center>
+                  </th>
+                </tr>
+                <tr>
+                  <th className="text-center">Debtor</th>
+                  <th className="text-center">Creditor</th>
+                </tr>
+              </table>
+            </th>
+          </tr>
+        </thead>
+        <tbody className="px-2">
+          {balance.map((account, index) => {
+            return (
+              <tr>
+                <th>{index + 1}.</th>
+                <td className="text-center">{account.generalAccount}</td>
+                <td className="text-center">{account.entitled}</td>
+                <td className="text-center">{account.sumDebit}</td>
+                <td className="text-center">{account.sumCredit}</td>
+                <td className="text-center">
+                  {account.sumDebit - account.sumCredit > 0
+                    ? account.sumDebit - account.sumCredit
+                    : 0}
+                </td>
+                <td className="text-center">
+                  {(account.sumDebit - account.sumCredit) * -1 > 0
+                    ? (account.sumDebit - account.sumCredit) * -1
+                    : 0}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };

@@ -625,6 +625,10 @@ const JournalTransactionRecordPage = ({
             Import csv
           </button>
           {importModalVisibility && importModal}
+          <button className="btn btn-outline-dark d-flex align-items-center">
+            <BsDownload style={{ fontSize: "20px" }} className="me-2" /> Export
+            pdf
+          </button>
           <button
             className="ms-2 btn btn-outline-primary"
             onClick={showAddModal}

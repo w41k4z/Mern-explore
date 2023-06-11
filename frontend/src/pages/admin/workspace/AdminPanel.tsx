@@ -26,7 +26,6 @@ import { AdminSidePanelContent } from "./staticData/AdminSidePanelContent";
 import "../../../assets/css/AdminPanel.css";
 import { useEffect, useState } from "react";
 import Axios from "../../../http-client-side/Axios";
-import DetailsOfGeneralLedger from "./content/DetailsOfGeneralLedger";
 
 const AdminPanel = () => {
   /* HOOKS */
@@ -136,8 +135,14 @@ const AdminPanel = () => {
             path="/journal/code"
             element={<JournalCodePage society={society} ceo={ceo} />}
           />
-          <Route path="/balance" element={<Balance society={society} ceo={ceo}/>}/>
-          <Route path="/detail-of-general-ledger" element={<DetailsOfGeneralLeadger/>}/>
+          <Route
+            path="/balance"
+            element={<Balance society={society} ceo={ceo} />}
+          />
+          <Route
+            path="/detail-of-general-ledger"
+            element={<DetailsOfGeneralLeadger />}
+          />
 
           <Route
             path="/journal/transaction-record"
